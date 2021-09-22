@@ -1,0 +1,23 @@
+{
+    "maps":
+    {
+        "map1":
+        {
+            "path": "Map1/index.html",
+            "difficulty": "1 Star",
+            "length": "00:00 seconds"
+        },
+        "map2":
+        {
+            "path": "Map2/index.html",
+            "difficulty": "2 Stars",
+            "length": "00:00 seconds"
+        },
+        "map3":
+        {
+            "path": "Map3/index.html",
+            "difficulty": "3 Stars",
+            "length": "00:00 seconds"
+        }
+    }
+}
