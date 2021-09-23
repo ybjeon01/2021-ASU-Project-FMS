@@ -4,20 +4,17 @@
         "map1":
         {
             "path": "Map1/index.html",
-            "difficulty": "1 Star",
-            "length": "00:00 seconds"
+            "dataPath": "Map1/mapdata.json"
         },
         "map2":
         {
             "path": "Map2/index.html",
-            "difficulty": "2 Stars",
-            "length": "00:00 seconds"
+            "dataPath": "Map2/mapdata.json"
         },
         "map3":
         {
             "path": "Map3/index.html",
-            "difficulty": "3 Stars",
-            "length": "00:00 seconds"
+            "dataPath": "Map3/mapdata.json"
         }
     }
 }
