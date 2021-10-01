@@ -1,5 +1,9 @@
+var canvasDiv = document.getElementById('myCanvas');
+var parentWidth = canvasDiv.offsetWidth; // width of browser window
+var parentHeight = canvasDiv.offsetHeight; // height of browser window
+
 function setup() {
-    createCanvas(1000,1000);
+    createCanvas(parentWidth,parentHeight);
   }
   
   function draw() {
