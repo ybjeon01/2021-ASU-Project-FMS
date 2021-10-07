@@ -8,5 +8,5 @@ function Circle(circleSize, accuracy, approachRate, x, y, color, number) {
     this.y = y;
     this.circleColor = color;
     this.number = number;
-    hitSound = loadSound('assets/hit_sound.mp3');
+    hitSound = loadSound('../Game_Components/assets/drum-hitnormal.wav');
 }

@@ -1,6 +1,7 @@
 {
     "map": 
     [
-        
+        {"Time": 1.0,   "X": 500,   "Y": 500,   "Color": "Red",     "Number": "1"},
+        {"Time": 2.0,   "X": 1000,  "Y": 250,   "Color": "Green",   "Number": "2"}
     ]
 }
