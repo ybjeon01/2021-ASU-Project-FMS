@@ -4,14 +4,14 @@ var mapdata = fetch("mapdata.json")
 })
 .then(data => mapdata = data);
 
-console.log(mapdata);
-
-var canvasDiv = document.getElementById('myCanvas');
-var parentWidth = canvasDiv.offsetWidth; // width of browser window
-var parentHeight = canvasDiv.offsetHeight; // height of browser window
+const canvasDiv = document.getElementById('myCanvas');
+const parentWidth = canvasDiv.offsetWidth; // width of browser window
+const parentHeight = canvasDiv.offsetHeight; // height of browser window
 
 function setup() {
     createCanvas(parentWidth,parentHeight);
+
+    Circle(0,0,0,0,0,0,0);
 }
   
 function draw() {
