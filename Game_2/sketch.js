@@ -1,4 +1,23 @@
-let game = undefined;
+class Game {
+
+  static reset() {
+    Block.reset();
+    InputArea.reset();
+  }
+
+  static run() {
+      Board.draw();
+      
+      Block.drop_from_the_sky();
+      Block.update_and_draw();
+  }
+
+  static key_handler(key_code) {
+    if (key_code == ENTER) {
+      InputArea.check_if_user_enter_right_word();
+    }
+  }
+}
 
 
 // The statements in the setup() function
@@ -6,15 +25,14 @@ let game = undefined;
 function setup() {
   createCanvas(1920, 1080);
   frameRate(60);
-  
-  game = new Game();
-  game.reset();
+
+  Game.reset();
 }
 
 function draw() {
-  game.run();
+  Game.run();
 }
 
 function keyPressed() {
-  game.key_handler(keyCode);
+  Game.key_handler(keyCode);
 }
