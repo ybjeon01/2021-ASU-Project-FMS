@@ -1,10 +1,14 @@
+// constants for block setting
 let BLOCK_WIDTH = 50;
 let BLOCK_HEIGHT = 20;
 let BLOCK_COLOR = 100;
+let BLOCK_DROP_INTERVAL = 3.0;
+let BLOCK_SPEED = 0.8;
 
-
+// variables used during playing game
 let MAX_NUM_BLOCKS = 5
 let USED_BLOCKS = [];
+let LAST_BLOCK_DROP_TIME = undefined;
 
 
 class Block {
@@ -23,10 +27,10 @@ class Block {
 
     update() {
         if (this.y > BOARD_HEIGHT) {
-            USED_BLOCKS.pop
+            USED_BLOCKS.pop();
         }
         else {
-            this.y += BOARD_GRAVITY;
+            this.y += BLOCK_SPEED;
         }
     }
 
@@ -45,9 +49,48 @@ class Block {
         );
     }
 
-    drop_from_the_sky() {
-        if ( USED_BLOCKS.length < MAX_NUM_BLOCKS) {
+    static reset() {
+        LAST_BLOCK_DROP_TIME = second();
+
+        for (let i = 0; i < 1; i++) {
             USED_BLOCKS.push(new Block("dog"));
         }
+    }
+
+    static drop_from_the_sky() {
+        let delta = second() - LAST_BLOCK_DROP_TIME;
+
+        if  (delta >= BLOCK_DROP_INTERVAL) {
+            if ( USED_BLOCKS.length < MAX_NUM_BLOCKS) {
+                USED_BLOCKS.push(new Block("dog"));
+
+                LAST_BLOCK_DROP_TIME = second();
+            }
+        }
+    }
+
+    static update_and_draw() {
+        USED_BLOCKS.forEach(block => {
+            block.update();
+            block.draw();
+        });
+    }
+
+    static break_block(text) {
+        let new_array = []
+        USED_BLOCKS.forEach(block => {
+            if (block.word !== text) {
+                new_array.push(block);
+            } 
+        });
+
+        if (new_array.length !== USED_BLOCKS.length) {
+            USED_BLOCKS = new_array;
+
+            return true;
+            // test
+            console.log(USED_BLOCKS);
+        }
+        return false;
     }
 }
