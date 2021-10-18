@@ -5,6 +5,8 @@ const canvasDiv = document.getElementById('myCanvas');
 let parentWidth = canvasDiv.offsetWidth; // width of browser window
 let parentHeight = canvasDiv.offsetHeight; // height of browser window
 
+let cursorImg, cursorMiddleImg;
+
 let temp;
 
 fetch("mapdata.json")
@@ -23,12 +25,19 @@ fetch("mapping.json")
     mapping = data;
   });
 
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+}, false);
+
 function preload() {
   song = loadSound('My_Love.mp3');
 
   backgroundImage = loadImage('cover.jpg');
   backgroundImage.filter(ERODE);
   backgroundImage.filter(BLUR, 10);
+
+  cursorImg = loadImage('/Game_1/Game_Components/assets/cursor.png');
+  cursorMiddleImg = loadImage('/Game_1/Game_Components/assets/cursormiddle.png');
 
   circles = [];
   active = [];
@@ -56,6 +65,7 @@ function setup() {
 }
 
 function draw() {
+  imageMode(CORNER);
   background(backgroundImage);
 
   let currentTime = song.currentTime();
@@ -75,9 +85,9 @@ function draw() {
     }
   }
 
-  stroke(0);
-  fill(255);
-  circle(mouseX, mouseY, 30);
+  imageMode(CENTER);
+  image(cursorImg, mouseX, mouseY);
+  image(cursorMiddleImg, mouseX, mouseY);
 
   noStroke();
   fill(0);
@@ -120,8 +130,8 @@ function keyPressed() {
 
   } else if (keyCode === 27) { // escape key
     if (isPlaying) { // pauses
-      frameRate(0);
       song.pause();
+      frameRate(0);
       cursor(ARROW);
       isPlaying = false;
     } else { // resumes
