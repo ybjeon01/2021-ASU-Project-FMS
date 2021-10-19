@@ -35,6 +35,28 @@ document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
 }, false);
 
+function createParticle() {
+  xVel = 0;
+  if (keyIsDown(88)) {
+    xVel = 5;
+  } else if (keyIsDown(90)) {
+    xVel = -5;
+  }
+  xVel *= Math.random() * 2;
+  transparency = Math.floor(Math.random() * 127) + 63;
+  yVel = 5 + (Math.random() * 2 - 1);
+  return { mouseX, mouseY, xVel, yVel, lifetime: 60, transparency };
+}
+
+function addCircle(x, y, diameter, diameter2) {
+  stroke(0, 255, 0);
+  fill(0, 0, 255)
+  circle(x, y, diameter);
+
+  noFill();
+  circle(x, y, diameter2);
+}
+
 function preload() {
   song = loadSound('My_Love.mp3');
 
@@ -113,20 +135,14 @@ function draw() {
     image(cursorTrail, element.mouseX, element.mouseY);
   });
 
-  if (Math.floor(Math.random() * 7) === 1) {
-    xVel = 0;
-    lifetime = 90;
-    if (keyIsDown(88)) {
-      xVel = 10;
-    } else if (keyIsDown(90)) {
-      xVel = -10;
-    }
-    particleArray.push({mouseX, mouseY, xVel, lifetime});
+  if (Math.floor(Math.random() * 4) === 1) {
+    particleArray.push(createParticle());
   }
   particleArray.forEach(element => {
     element.mouseX += element.xVel;
+    tint(255, element.transparency);
     image(particleImg, element.mouseX, element.mouseY);
-    element.mouseY += 5;
+    element.mouseY += yVel;
     element.xVel /= 1.04;
     element.lifetime--;
     if (element.lifetime === 0) {
@@ -136,6 +152,8 @@ function draw() {
       }
     }
   });
+
+  tint(255,255);
   image(cursorImg, mouseX, mouseY);
   image(cursorMiddleImg, mouseX, mouseY);
 
@@ -157,15 +175,6 @@ function draw() {
   previousY = mouseY;
 }
 
-function addCircle(x, y, diameter, diameter2) {
-  stroke(0, 255, 0);
-  fill(0, 0, 255)
-  circle(x, y, diameter);
-
-  noFill();
-  circle(x, y, diameter2);
-}
-
 function onResize() {
   parentWidth = canvasDiv.offsetWidth; // width of browser window
   parentHeight = canvasDiv.offsetHeight; // height of browser window
@@ -185,24 +194,37 @@ function mouseClicked() {
 }
 
 function keyPressed() {
-  console.log('Key Pressed: ' + keyCode);
-  if (keyCode === 90) { // z key
-    particleArray.push({mouseX, mouseY, xVel:-10, lifetime:90});
-  } else if (keyCode === 88) { // x key
-    particleArray.push({mouseX, mouseY, xVel:10, lifetime:90});
-  } else if (keyCode === 27) { // escape key
-    if (isPlaying) { // pauses
-      song.pause();
-      frameRate(0);
-      cursor(ARROW);
-      isPlaying = false;
-    } else { // resumes
-      frameRate(120);
-      song.play();
-      noCursor();
-      isPlaying = true;
-    }
-  } else if (keyCode === 70) { // f key
-    fullscreen(!fullscreen());
+  switch (keyCode) {
+    case 90: // z
+
+      particleArray.push(createParticle());
+      break;
+
+    case 88: // x
+
+      particleArray.push(createParticle());
+      break;
+
+    case 27: // escape
+      if (isPlaying) { // pauses
+        song.pause();
+        frameRate(0);
+        cursor(ARROW);
+        isPlaying = false;
+      } else { // resumes
+        frameRate(120);
+        song.play();
+        noCursor();
+        isPlaying = true;
+      }
+      break;
+
+    case 70: // f
+      fullscreen(!fullscreen());
+      break;
+
+    default:
+      console.log('Key Pressed: ' + keyCode);
+      break;
   }
 }
