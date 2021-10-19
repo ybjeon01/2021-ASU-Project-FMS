@@ -38,6 +38,7 @@ document.addEventListener("contextmenu", function (e) {
 }, false);
 
 function createParticle() {
+  newX = mouseX + (Math.random() * 10 - 5);
   xVel = 0;
   if (keyIsDown(88)) {
     xVel = 5;
@@ -45,9 +46,9 @@ function createParticle() {
     xVel = -5;
   }
   xVel *= Math.random() * 2;
-  transparency = Math.floor(Math.random() * 127) + 63;
+  transparency = Math.floor(Math.random() * 127);
   yVel = 5 + (Math.random() * 2 - 1);
-  return { mouseX, mouseY, xVel, yVel, lifetime: 60, transparency };
+  return { mouseX: newX, mouseY, xVel, yVel, lifetime: 50, transparency };
 }
 
 function addCircle(x, y, diameter, diameter2) {
@@ -137,20 +138,19 @@ function draw() {
 
   // Cursor
   imageMode(CENTER);
-  while (cursorTrailArray.length >= 10) {
+  while (cursorTrailArray.length >= 20) {
     cursorTrailArray.shift();
   }
 
-  let newX = mouseX + (Math.random() * 4 - 2);
-  cursorTrailArray.push({ mouseX: newX, mouseY, visibility: 255 });
+  cursorTrailArray.push({ mouseX, mouseY, visibility: 255 });
 
   cursorTrailArray.forEach(element => {
     tint(255, Math.floor(element.visibility));
     image(cursorTrail, element.mouseX, element.mouseY);
-    element.visibility -= 8.5;
+    element.visibility -= 10;
   });
 
-  if (Math.floor(Math.random() * 4) === 1) {
+  if (Math.floor(Math.random() * 4) === 0) {
     particleArray.push(createParticle());
   }
   particleArray.forEach(element => {
