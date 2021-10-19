@@ -1,10 +1,11 @@
 body {
     margin: 2em 2em;
+    overflow: hidden;
 }
 
 .flex-parent {
     display: flex;
-    min-height:80vh;
+    justify-content: center;
     min-width: 30%;
   }
 
@@ -13,13 +14,16 @@ body {
     background: #efefef;    
     border: 3px solid #333;
     justify-content: space-between;
-    min-height:80%;
+    min-height:100%;
+    margin: 2em;
 }
 
 #score {
-    width: 10em;
+    height: 23em;
+    width: 20em;
     text-align: center;
     font-size: 2em;
+    margin-right: 10em;
 }
 
 ul {
@@ -27,6 +31,7 @@ ul {
   }
 
 .wrapper-item {
+    padding: 0px 5em;
     margin: 3em;
     border: 3px solid #333;
     text-align: center;
@@ -43,4 +48,19 @@ ul {
     text-decoration:none; 
     cursor:pointer;  
   }
-  
+
+#home {
+    margin: -1em -1em;
+}
+
+#home > a {
+color: #0060B6;
+text-decoration: none;
+font-size: 3em;
+}
+
+#home > a:hover {
+color:#00A0C6; 
+text-decoration:none; 
+cursor:pointer;  
+}
