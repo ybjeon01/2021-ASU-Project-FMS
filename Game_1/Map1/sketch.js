@@ -5,11 +5,13 @@ const canvasDiv = document.getElementById('myCanvas');
 let parentWidth = canvasDiv.offsetWidth; // width of browser window
 let parentHeight = canvasDiv.offsetHeight; // height of browser window
 
-let cursorImg, cursorMiddleImg, cursorTrail, cursorTrailArray, particleImg, particleArray;
+let cursorImg, cursorMiddleImg, cursorTrail, cursorTrailArray, particleImg, particleImg2, particleArray;
 
 let gameScore, gameDisplayedScore;
 
 let previousX, previousY;
+
+let approachCircleImg, circleImg, circleOverlayImg;
 
 let temp;
 
@@ -49,12 +51,16 @@ function createParticle() {
 }
 
 function addCircle(x, y, diameter, diameter2) {
-  stroke(0, 255, 0);
-  fill(0, 0, 255)
-  circle(x, y, diameter);
+  imageMode(CENTER);
+  image(circleImg, x, y, diameter, diameter);
+  image(circleOverlayImg, x, y, diameter, diameter);
+  image(approachCircleImg, x, y, diameter2, diameter2)
+}
 
-  noFill();
-  circle(x, y, diameter2);
+function difference(x1, y1, x2, y2) {
+  xDiff = Math.abs(x2 - x1);
+  yDiff = Math.abs(y2 - y1);
+  return xDiff + yDiff;
 }
 
 function preload() {
@@ -65,7 +71,11 @@ function preload() {
   cursorImg = loadImage('/Game_1/Game_Components/assets/cursor.png');
   cursorMiddleImg = loadImage('/Game_1/Game_Components/assets/cursormiddle.png');
   cursorTrail = loadImage('/Game_1/Game_Components/assets/cursortrail.png');
-  particleImg = loadImage('/Game_1/Game_Components/assets/particle300.png');
+  particleImg = loadImage('/Game_1/Game_Components/assets/star.png');
+  particleImg2 = loadImage('/Game_1/Game_Components/assets/star2.png');
+  approachCircleImg = loadImage('/Game_1/Game_Components/assets/approachcircle.png');
+  circleImg = loadImage('/Game_1/Game_Components/assets/hitcircle.png');
+  circleOverlayImg = loadImage('/Game_1/Game_Components/assets/hitcircleoverlay.png')
 
   particleArray = [];
   cursorTrailArray = [];
@@ -78,7 +88,6 @@ function setup() {
 
   isPlaying = true;
 
-  noCursor();
   frameRate(120);
 
   console.log(mapdata);
@@ -97,6 +106,7 @@ function setup() {
   previousX = mouseX;
   previousY = mouseY;
 
+  noCursor();
   song.play();
 }
 
@@ -110,8 +120,8 @@ function draw() {
 
   let currentTime = song.currentTime();
 
-  for (let i = 0; i < circles.length && i <= 5; i++) {
-    if (!circles[i].isActive && currentTime > (circles[i].time - 5)) {
+  for (let i = 0; i < circles.length; i++) {
+    if (!circles[i].isActive && currentTime > (circles[i].time - 1)) {
       active.push(circles[i]);
       circles[i].isActive = true;
       circles.splice(i, 1);
@@ -127,12 +137,17 @@ function draw() {
 
   // Cursor
   imageMode(CENTER);
-  if (cursorTrailArray.length === 10) {
+  while (cursorTrailArray.length >= 10) {
     cursorTrailArray.shift();
   }
-  cursorTrailArray.push({ mouseX, mouseY });
+
+  let newX = mouseX + (Math.random() * 4 - 2);
+  cursorTrailArray.push({ mouseX: newX, mouseY, visibility: 255 });
+
   cursorTrailArray.forEach(element => {
+    tint(255, Math.floor(element.visibility));
     image(cursorTrail, element.mouseX, element.mouseY);
+    element.visibility -= 8.5;
   });
 
   if (Math.floor(Math.random() * 4) === 1) {
@@ -142,6 +157,7 @@ function draw() {
     element.mouseX += element.xVel;
     tint(255, element.transparency);
     image(particleImg, element.mouseX, element.mouseY);
+    image(particleImg2, element.mouseX, element.mouseY);
     element.mouseY += yVel;
     element.xVel /= 1.04;
     element.lifetime--;
@@ -153,7 +169,7 @@ function draw() {
     }
   });
 
-  tint(255,255);
+  tint(255, 255);
   image(cursorImg, mouseX, mouseY);
   image(cursorMiddleImg, mouseX, mouseY);
 
