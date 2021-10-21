@@ -1,21 +1,22 @@
-let INPUT = undefined;
-
 class InputArea {
-
-    static reset() {
-        INPUT = createInput('');
-        INPUT.position(0, 0);
-        INPUT.size(100);
+    constructor(block_manager) {
+        this.block_manager = block_manager;
+        let input = undefined;
     }
 
-    static check_if_user_enter_right_word() {
-        let success = Block.break_block(INPUT.value());
+    reset() {
+        this.input = createInput('');
+        this.input.position(0, 0);
+        this.input.size(100);
+    }
+
+    check_if_user_enter_right_word() {
+        let success = this.block_manager.break_block(this.input.value());
         console.log(success);
         if (success) {
-            INPUT.value('');
+            this.input.value('');
         }
     }
-
 }
 
 

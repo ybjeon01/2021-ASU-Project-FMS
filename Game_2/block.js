@@ -1,22 +1,91 @@
-// constants for block setting
-let BLOCK_WIDTH = 50;
-let BLOCK_HEIGHT = 20;
-let BLOCK_COLOR = 100;
-let BLOCK_DROP_INTERVAL = 3.0;
-let BLOCK_SPEED = 0.8;
+let WORD_LIST = [
+    "Agreement", "Air", "Airport", "Alcohol", "Ambition", "Amount", "Analysis",
+    "Analyst", "Animal", "Answer", "Anxiety", "Apartment", "Book", "Boss",
+    "Bottom", "Box", "Boy", "Boyfriend", "Bread", "Breath", "Brother", "Building",
+    "Bus", "Business", "Debt", "Decision", "Definition", "Delivery", "Demand",
+    "Department", "Departure", "Depression", "Depth", "Description", "Design",
+    "Desk", "Development", "Device", "Diamond", "Difference", "Difficulty",
+    "Dinner", "Direction", "Gene", "Gift", "Girl", "Girlfriend", "Goal", 
+    "Government"
+  ]
+  
 
-// variables used during playing game
-let MAX_NUM_BLOCKS = 5
-let USED_BLOCKS = [];
-let LAST_BLOCK_DROP_TIME = undefined;
+// constants for block setting
+let BLOCK_WIDTH = 80;
+let BLOCK_HEIGHT = 30;
+let BLOCK_COLOR = 100;
+let BLOCK_DROP_INTERVAL = 2.0;
+let BLOCK_SPEED = 3;
+
+let MAX_NUM_BLOCK = 15;
+
+
+class BlockManager {
+    constructor(score_area, max_num_block=MAX_NUM_BLOCK) {
+        this.max_num_block = max_num_block;
+
+        this.last_block_drop_time = undefined;
+        this.used_blocks = []
+        this.score_area = score_area
+    }
+
+    reset() {
+        this.last_block_drop_time = second();
+
+        for (let i = 0; i < 1; i++) {
+            this.used_blocks.push(new Block("dog", this));
+        }
+    }
+
+    drop_from_the_sky() {
+        let delta = second() - this.last_block_drop_time;
+
+        if  (delta >= BLOCK_DROP_INTERVAL) {
+            if ( this.used_blocks.length < this.max_num_block) {
+                let random_index = Math.floor(Math.random() * WORD_LIST.length)
+                
+                this.used_blocks.push(new Block(WORD_LIST[random_index], this));
+                this.last_block_drop_time = second();
+            }
+        }
+    }
+
+    update_and_draw() {
+        this.used_blocks.forEach(block => {
+            block.update();
+            block.draw();
+        });
+    }
+
+    break_block(text) {
+        let new_array = []
+        this.used_blocks.forEach(block => {
+            if (block.word !== text) {
+                new_array.push(block);
+            } 
+        });
+
+        if (new_array.length !== this.used_blocks.length) {
+            this.used_blocks = new_array;
+            this.score_area.add_score(100);
+            return true;
+            // test
+            console.log(this.used_blocks);
+        }
+        return false;
+    }
+
+}
 
 
 class Block {
-    constructor(word) {
+    constructor(word, manager, block_speed=BLOCK_SPEED) {
         let {x, y} = this.get_random_loc();
         this.x = x;
         this.y = y;
 
+        this.manager = manager
+        this.block_speed = block_speed
         this.word = word;
     }
 
@@ -27,10 +96,10 @@ class Block {
 
     update() {
         if (this.y > BOARD_HEIGHT) {
-            USED_BLOCKS.pop();
+            this.manager.used_blocks.pop();
         }
         else {
-            this.y += BLOCK_SPEED;
+            this.y += this.block_speed;
         }
     }
 
@@ -48,49 +117,11 @@ class Block {
             this.y,
         );
     }
+}
 
-    static reset() {
-        LAST_BLOCK_DROP_TIME = second();
 
-        for (let i = 0; i < 1; i++) {
-            USED_BLOCKS.push(new Block("dog"));
-        }
-    }
+class HardBlock extends Block {
+    constructor() {
 
-    static drop_from_the_sky() {
-        let delta = second() - LAST_BLOCK_DROP_TIME;
-
-        if  (delta >= BLOCK_DROP_INTERVAL) {
-            if ( USED_BLOCKS.length < MAX_NUM_BLOCKS) {
-                USED_BLOCKS.push(new Block("dog"));
-
-                LAST_BLOCK_DROP_TIME = second();
-            }
-        }
-    }
-
-    static update_and_draw() {
-        USED_BLOCKS.forEach(block => {
-            block.update();
-            block.draw();
-        });
-    }
-
-    static break_block(text) {
-        let new_array = []
-        USED_BLOCKS.forEach(block => {
-            if (block.word !== text) {
-                new_array.push(block);
-            } 
-        });
-
-        if (new_array.length !== USED_BLOCKS.length) {
-            USED_BLOCKS = new_array;
-
-            return true;
-            // test
-            console.log(USED_BLOCKS);
-        }
-        return false;
     }
 }

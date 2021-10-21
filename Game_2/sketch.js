@@ -1,24 +1,35 @@
+
+
 class Game {
 
-  static reset() {
-    Block.reset();
-    InputArea.reset();
+  constructor() {
+    this.score_area = new ScoreArea();
+    this.block_manager = new BlockManager(this.score_area);
+    this.input_area = new InputArea(this.block_manager);
   }
 
-  static run() {
+  reset() {
+    this.block_manager.reset();
+    this.input_area.reset();
+    this.score_area.reset();
+  }
+
+  run() {
       Board.draw();
       
-      Block.drop_from_the_sky();
-      Block.update_and_draw();
+      this.block_manager.drop_from_the_sky();
+      this.block_manager.update_and_draw();
+      this.score_area.draw();
   }
 
-  static key_handler(key_code) {
+  key_handler(key_code) {
     if (key_code == ENTER) {
-      InputArea.check_if_user_enter_right_word();
+      this.input_area.check_if_user_enter_right_word();
     }
   }
 }
 
+let game = undefined;
 
 // The statements in the setup() function
 // execute once when the program begins
@@ -26,13 +37,14 @@ function setup() {
   createCanvas(1920, 1080);
   frameRate(60);
 
-  Game.reset();
+  game = new Game();
+  game.reset();
 }
 
 function draw() {
-  Game.run();
+  game.run();
 }
 
 function keyPressed() {
-  Game.key_handler(keyCode);
+  game.key_handler(keyCode);
 }
