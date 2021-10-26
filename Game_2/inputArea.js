@@ -12,10 +12,8 @@ class InputArea {
 
     check_if_user_enter_right_word() {
         let success = this.block_manager.break_block(this.input.value());
-        console.log(success);
-        if (success) {
-            this.input.value('');
-        }
+        this.input.value('');
+        return success;
     }
 }
 

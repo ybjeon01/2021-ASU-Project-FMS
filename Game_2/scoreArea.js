@@ -6,7 +6,7 @@ SCORE_LOC_Y = 800
 
 class ScoreArea {
     constructor() {
-        let score = 0;
+        this.score = 0;
         this.y = SCORE_HEIGHT;
         this.x = SCORE_WIDTH;
     }
@@ -26,7 +26,7 @@ class ScoreArea {
     }
 
     add_score(score) {
-        this.score = score;
+        this.score += score;
     }
 
     draw() {
@@ -38,7 +38,7 @@ class ScoreArea {
 
         textAlign(CENTER, CENTER);
         text(
-            this.word,
+            this.score,
             this.x,
             this.y,
         );

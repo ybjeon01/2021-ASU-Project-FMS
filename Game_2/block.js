@@ -11,18 +11,24 @@ let WORD_LIST = [
   
 
 // constants for block setting
-let BLOCK_WIDTH = 80;
-let BLOCK_HEIGHT = 30;
+let BLOCK_WIDTH = 100;
+let BLOCK_HEIGHT = 40;
 let BLOCK_COLOR = 100;
-let BLOCK_DROP_INTERVAL = 2.0;
-let BLOCK_SPEED = 3;
+let BLOCK_TEXT_SIZE = 16;
 
+let BLOCK_DROP_INTERVAL = 1.0;
+let BLOCK_SPEED = 2.5;
 let MAX_NUM_BLOCK = 15;
 
 
 class BlockManager {
-    constructor(score_area, max_num_block=MAX_NUM_BLOCK) {
+    constructor(
+        score_area,
+        max_num_block=MAX_NUM_BLOCK,
+        block_drop_interval=BLOCK_DROP_INTERVAL) {
+
         this.max_num_block = max_num_block;
+        this.block_drop_interval = block_drop_interval;
 
         this.last_block_drop_time = undefined;
         this.used_blocks = []
@@ -30,7 +36,7 @@ class BlockManager {
     }
 
     reset() {
-        this.last_block_drop_time = second();
+        this.last_block_drop_time = Math.floor(new Date() / 1000);
 
         for (let i = 0; i < 1; i++) {
             this.used_blocks.push(new Block("dog", this));
@@ -38,23 +44,32 @@ class BlockManager {
     }
 
     drop_from_the_sky() {
-        let delta = second() - this.last_block_drop_time;
+        let delta = Math.floor(new Date() / 1000) - this.last_block_drop_time;
 
-        if  (delta >= BLOCK_DROP_INTERVAL) {
+        if  (delta >= this.block_drop_interval) {
             if ( this.used_blocks.length < this.max_num_block) {
                 let random_index = Math.floor(Math.random() * WORD_LIST.length)
                 
                 this.used_blocks.push(new Block(WORD_LIST[random_index], this));
-                this.last_block_drop_time = second();
+                this.last_block_drop_time = Math.floor(new Date() / 1000);
             }
         }
     }
 
+    // if block is dropped below the window, return true
     update_and_draw() {
-        this.used_blocks.forEach(block => {
-            block.update();
-            block.draw();
-        });
+        let remove = false;
+        for (let i = this.used_blocks.length - 1; i >= 0; i--) {
+            let block = this.used_blocks[i];
+            remove = block.update();
+            if (remove) {
+                this.used_blocks.splice(i, 1);
+            }
+            else {
+                block.draw();
+            }
+        }
+        return remove;
     }
 
     break_block(text) {
@@ -67,26 +82,30 @@ class BlockManager {
 
         if (new_array.length !== this.used_blocks.length) {
             this.used_blocks = new_array;
-            this.score_area.add_score(100);
             return true;
             // test
             console.log(this.used_blocks);
         }
         return false;
     }
-
 }
 
 
 class Block {
-    constructor(word, manager, block_speed=BLOCK_SPEED) {
+    constructor(
+        word,
+        manager,
+        block_speed=BLOCK_SPEED,
+        text_size=BLOCK_TEXT_SIZE) {
+        
         let {x, y} = this.get_random_loc();
         this.x = x;
         this.y = y;
 
-        this.manager = manager
-        this.block_speed = block_speed
+        this.manager = manager;
         this.word = word;
+        this.block_speed = block_speed;
+        this.text_size = text_size;
     }
 
     get_random_loc() {
@@ -94,13 +113,15 @@ class Block {
         return {x, y: -1 * BLOCK_HEIGHT / 2};
     }
 
+    // if block is out of bound, return true
     update() {
         if (this.y > BOARD_HEIGHT) {
-            this.manager.used_blocks.pop();
+            return true;
         }
         else {
             this.y += this.block_speed;
         }
+        return false;
     }
 
     draw() {
@@ -109,19 +130,12 @@ class Block {
         rect(this.x, this.y, BLOCK_WIDTH, BLOCK_HEIGHT);
         
         fill(255, 255, 255);
-
+        textSize(this.text_size);
         textAlign(CENTER, CENTER);
         text(
             this.word,
             this.x,
             this.y,
         );
-    }
-}
-
-
-class HardBlock extends Block {
-    constructor() {
-
     }
 }

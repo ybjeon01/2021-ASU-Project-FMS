@@ -3,7 +3,12 @@ let BOARD_HEIGHT = 1024;
 
 
 class Board {
-    static draw() {
+    consturctor(width=BOARD_WIDTH, height=BOARD_HEIGHT) {
+        this.width = BOARD_WIDTH;
+        this.height = BOARD_HEIGHT
+    }
+    
+    draw() {
         background(255, 255, 255);
     }
 }
