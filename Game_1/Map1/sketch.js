@@ -7,11 +7,13 @@ let parentHeight = canvasDiv.offsetHeight; // height of browser window
 
 let cursorImg, cursorMiddleImg, cursorTrail, cursorTrailArray, particleImg, particleImg2, particleArray;
 
-let gameScore, gameDisplayedScore;
+let gameScore, gameDisplayedScore, combo;
 
 let previousX, previousY;
 
 let approachCircleImg, circleImg, circleOverlayImg;
+
+let successSound, missSound;
 
 let temp;
 
@@ -40,9 +42,9 @@ document.addEventListener("contextmenu", function (e) {
 function createParticle() {
   newX = mouseX + (Math.random() * 10 - 5);
   xVel = 0;
-  if (keyIsDown(88)) {
+  if (keyIsDown(88) || mouseButton === RIGHT) {
     xVel = 5;
-  } else if (keyIsDown(90)) {
+  } else if (keyIsDown(90) || mouseButton === LEFT) {
     xVel = -5;
   }
   xVel *= Math.random() * 2;
@@ -51,11 +53,21 @@ function createParticle() {
   return { mouseX: newX, mouseY, xVel, yVel, lifetime: 50, transparency };
 }
 
-function addCircle(x, y, diameter, diameter2) {
+function addCircle(x, y, diameter, diameter2, color, number) {
   imageMode(CENTER);
+  tint(color.r, color.g, color.b);
   image(circleImg, x, y, diameter, diameter);
+  tint(255,255,255);
   image(circleOverlayImg, x, y, diameter, diameter);
-  image(approachCircleImg, x, y, diameter2, diameter2)
+  tint(color.r, color.g, color.b);
+  image(approachCircleImg, x, y, diameter2, diameter2);
+  tint(255,255,255);
+  textAlign(CENTER, CENTER);
+  strokeWeight(3);
+  stroke(0);
+  fill(255);
+  textSize(diameter / 2);
+  text(number, x, y);
 }
 
 function difference(x1, y1, x2, y2) {
@@ -66,7 +78,6 @@ function difference(x1, y1, x2, y2) {
 
 function preload() {
   song = loadSound('My_Love.mp3');
-
   backgroundImage = loadImage('cover.jpg');
 
   cursorImg = loadImage('/Game_1/Game_Components/assets/cursor.png');
@@ -76,7 +87,10 @@ function preload() {
   particleImg2 = loadImage('/Game_1/Game_Components/assets/star2.png');
   approachCircleImg = loadImage('/Game_1/Game_Components/assets/approachcircle.png');
   circleImg = loadImage('/Game_1/Game_Components/assets/hitcircle.png');
-  circleOverlayImg = loadImage('/Game_1/Game_Components/assets/hitcircleoverlay.png')
+  circleOverlayImg = loadImage('/Game_1/Game_Components/assets/hitcircleoverlay.png');
+
+  successSound = loadSound('/Game_1/Game_Components/assets/drum-hitnormal.wav');
+  missSound = loadSound('/Game_1/Game_Components/assets/combobreak.mp3');
 
   particleArray = [];
   cursorTrailArray = [];
@@ -89,20 +103,21 @@ function setup() {
 
   isPlaying = true;
 
-  frameRate(120);
+  frameRate(60);
 
   console.log(mapdata);
   console.log(mapping);
 
   gameScore = 0;
   gameDisplayedScore = 0;
+  combo = 1;
 
-  temp = new Circle(4, 4, 4, 50, 50, 'red', 1, 5);
+  temp = new Circle(4, 4, 4, 50, 50, {r:77,g:139,b:217}, 1, 5);
 
   console.log(temp);
 
   circles.push(temp);
-  circles.push(new Circle(4, 4, 4, 150, 250, 'red', 1, 7))
+  circles.push(new Circle(4, 4, 4, 150, 250, {r:255,g:0,b:0}, 1, 7))
 
   previousX = mouseX;
   previousY = mouseY;
@@ -121,10 +136,10 @@ function draw() {
 
   let currentTime = song.currentTime();
 
+  // Circles
   for (let i = 0; i < circles.length; i++) {
-    if (!circles[i].isActive && currentTime > (circles[i].time - 1)) {
+    if (currentTime > (circles[i].time - 2)) {
       active.push(circles[i]);
-      circles[i].isActive = true;
       circles.splice(i, 1);
     }
   }
@@ -133,6 +148,7 @@ function draw() {
     let response = active[i].update(currentTime);
     if (response === -1) {
       active.splice(i, 1);
+      missSound.play();
     }
   }
 
@@ -174,18 +190,24 @@ function draw() {
   image(cursorMiddleImg, mouseX, mouseY);
 
   // FPS
-  textAlign(LEFT);
-  noStroke();
-  fill(0);
+  textAlign(LEFT,TOP);
+  strokeWeight(2);
+  stroke(0);
+  fill(255);
+  textSize(26);
   text(frameRate().toLocaleString(undefined, { maximumFractionDigits: 0 })
-    , 10, 20);
+    , 10, 10);
 
   // Score
-  textAlign(RIGHT);
+  textAlign(RIGHT,TOP);
   if (gameDisplayedScore < gameScore) {
     gameDisplayedScore += 5;
   }
-  text(gameDisplayedScore, parentWidth - 10, 20);
+  text(gameDisplayedScore, parentWidth - 10, 10);
+
+  // Combo
+  textAlign(LEFT,BOTTOM);
+  text(combo, 10, parentHeight - 10);
 
   previousX = mouseX;
   previousY = mouseY;
@@ -202,22 +224,59 @@ function mouseClicked() {
   for (let i = 0; i < active.length; i++) {
     let clickData = active[i].click(mouseX, mouseY, song.currentTime());
     if (clickData === -1) { // fail
+      active.splice(i, 1);
+      missSound.play();
+      combo = 1;
       break;
     } else if (clickData === 1) { // success
+      active.splice(i, 1);
+      successSound.play();
+      gameScore += 300 * combo;
+      combo++;
       break;
     }
   }
+
+  particleArray.push(createParticle());
 }
 
 function keyPressed() {
   switch (keyCode) {
     case 90: // z
-
+      for (let i = 0; i < active.length; i++) {
+        let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+        if (clickData === -1) { // fail
+          active.splice(i, 1);
+          missSound.play();
+          combo = 1;
+          break;
+        } else if (clickData === 1) { // success
+          active.splice(i, 1);
+          successSound.play();
+          gameScore += 300 * combo;
+          combo++;
+          break;
+        }
+      }
       particleArray.push(createParticle());
       break;
 
     case 88: // x
-
+      for (let i = 0; i < active.length; i++) {
+        let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+        if (clickData === -1) { // fail
+          active.splice(i, 1);
+          missSound.play();
+          combo = 1;
+          break;
+        } else if (clickData === 1) { // success
+          active.splice(i, 1);
+          successSound.play();
+          gameScore += 300 * combo;
+          combo++;
+          break;
+        }
+      }
       particleArray.push(createParticle());
       break;
 
@@ -228,7 +287,7 @@ function keyPressed() {
         cursor(ARROW);
         isPlaying = false;
       } else { // resumes
-        frameRate(120);
+        frameRate(60);
         song.play();
         noCursor();
         isPlaying = true;
