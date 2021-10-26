@@ -1,11 +1,12 @@
 function Bird() {
     this.y = height/2;
     this.x = 64;
-  
-    this.gravity = 0.7;
-    this.lift = -12;
+    
+    this.timer = -1;
+
+    this.gravity = 0.75;
+    this.lift = -17;
     this.velocity = 0;
-    this.jumpDelay = false;
   
     this.show = function() {
       fill(255);
@@ -14,16 +15,11 @@ function Bird() {
   
     this.jump = function() {
       this.velocity += this.lift;
-      this.gravity = 0;
-      this.gravity = 0.7;
-      this.jumpDelay = true;
     }
   
     this.update = function() {
-    
 
-            this.velocity += this.gravity;
-
+      this.velocity += this.gravity;
       this.y += this.velocity;
   
       if (this.y > height) {
@@ -35,8 +31,6 @@ function Bird() {
         this.y = 0;
         this.velocity = 0;
       }
-
   
-    }
-  
+    }  
   }
