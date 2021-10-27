@@ -1,4 +1,4 @@
-let mapdata, mapping, canvas, backgroundImage, isPlaying, song;
+let mapdata, mapping, canvas, backgroundImage, isPlaying, song, isRightClick, isLeftClick;
 let circles; // array of circles
 let active; // array of active circles
 const canvasDiv = document.getElementById('myCanvas');
@@ -42,9 +42,9 @@ document.addEventListener("contextmenu", function (e) {
 function createParticle() {
   newX = mouseX + (Math.random() * 10 - 5);
   xVel = 0;
-  if (keyIsDown(88) || mouseButton === RIGHT) {
+  if (keyIsDown(88) || isRightClick) {
     xVel = 5;
-  } else if (keyIsDown(90) || mouseButton === LEFT) {
+  } else if (keyIsDown(90) || isLeftClick) {
     xVel = -5;
   }
   xVel *= Math.random() * 2;
@@ -172,12 +172,12 @@ function draw() {
   particleArray.forEach(element => {
     element.mouseX += element.xVel;
     tint(255, element.transparency);
-    image(particleImg, element.mouseX, element.mouseY);
-    image(particleImg2, element.mouseX, element.mouseY);
+    image(particleImg, element.mouseX, element.mouseY, 30, 30);
+    image(particleImg2, element.mouseX, element.mouseY, 30, 30);
     element.mouseY += yVel;
     element.xVel /= 1.04;
     element.lifetime--;
-    if (element.lifetime === 0) {
+    if (element.lifetime <= 0) {
       index = particleArray.indexOf(element);
       if (index > -1) {
         particleArray.splice(index, 1);
@@ -220,7 +220,7 @@ function onResize() {
   resizeCanvas(parentWidth, parentHeight); // resize the window
 }
 
-function mouseClicked() {
+function mousePressed(event) {
   for (let i = 0; i < active.length; i++) {
     let clickData = active[i].click(mouseX, mouseY, song.currentTime());
     if (clickData === -1) { // fail
@@ -237,7 +237,22 @@ function mouseClicked() {
     }
   }
 
+  if (event.button === 0) {
+    isLeftClick = true;
+  }
+  else if (event.button === 2) {
+    isRightClick = true;
+  }
   particleArray.push(createParticle());
+}
+
+function mouseReleased(event) {
+  if (event.button === 0) {
+    isLeftClick = false;
+  }
+  else if (event.button === 2) {
+    isRightClick = false;
+  }
 }
 
 function keyPressed() {

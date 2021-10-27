@@ -17,7 +17,6 @@ function Circle(circleSize, accuracy, approachRate, x, y, color, number, time) {
     this.update = function (currentTime) {
         let timeDiff = this.time - currentTime;
         if (timeDiff < 0) {
-            fail();
             return -1;
         };
 
