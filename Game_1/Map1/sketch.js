@@ -203,11 +203,11 @@ function draw() {
   if (gameDisplayedScore < gameScore) {
     gameDisplayedScore += 5;
   }
-  text(gameDisplayedScore, parentWidth - 10, 10);
+  text("SCORE " + gameDisplayedScore, parentWidth - 10, 10);
 
   // Combo
   textAlign(LEFT,BOTTOM);
-  text(combo, 10, parentHeight - 10);
+  text("COMBO " + combo + "X", 10, parentHeight - 10);
 
   previousX = mouseX;
   previousY = mouseY;
