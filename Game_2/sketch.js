@@ -1,7 +1,7 @@
 class Game {
 
-  constructor() {
-    this.board = new Board(windowWidth, windowHeight)
+  constructor(board_width, board_height) {
+    this.board = new Board(board_width, board_height);
 
     this.score_area = new ScoreArea();
     this.block_manager = new BlockManager(this);
@@ -56,11 +56,15 @@ let game = undefined;
 // The statements in the setup() function
 // execute once when the program begins
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  let width = document.documentElement.clientWidth;
+  let height = document.documentElement.clientHeight;
+
+  createCanvas(width, height);
   frameRate(60);
+
   debugger;
   console.log("working");
-  game = new Game();
+  game = new Game(width, height);
   game.reset();
 
 }

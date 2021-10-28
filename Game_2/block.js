@@ -117,7 +117,7 @@ class Block {
 
     // if block is out of bound, return true
     update() {
-        if (this.y > BOARD_HEIGHT) {
+        if (this.y > this.game.board.height) {
             return true;
         }
         else {
