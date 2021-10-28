@@ -101,8 +101,6 @@ function preload() {
 function setup() {
   canvas = createCanvas(parentWidth, parentHeight);
 
-  fullscreen(true);
-
   isPlaying = true;
 
   frameRate(60);
