@@ -23,7 +23,7 @@ let MAX_NUM_BLOCK = 15;
 
 class BlockManager {
     constructor(
-        score_area,
+        game,
         max_num_block=MAX_NUM_BLOCK,
         block_drop_interval=BLOCK_DROP_INTERVAL) {
 
@@ -32,14 +32,14 @@ class BlockManager {
 
         this.last_block_drop_time = undefined;
         this.used_blocks = []
-        this.score_area = score_area
+        this.game = game
     }
 
     reset() {
         this.last_block_drop_time = Math.floor(new Date() / 1000);
 
         for (let i = 0; i < 1; i++) {
-            this.used_blocks.push(new Block("dog", this));
+            this.used_blocks.push(new Block("dog", this.game));
         }
     }
 
@@ -50,7 +50,7 @@ class BlockManager {
             if ( this.used_blocks.length < this.max_num_block) {
                 let random_index = Math.floor(Math.random() * WORD_LIST.length)
                 
-                this.used_blocks.push(new Block(WORD_LIST[random_index], this));
+                this.used_blocks.push(new Block(WORD_LIST[random_index], this.game));
                 this.last_block_drop_time = Math.floor(new Date() / 1000);
             }
         }
@@ -94,22 +94,24 @@ class BlockManager {
 class Block {
     constructor(
         word,
-        manager,
+        game,
         block_speed=BLOCK_SPEED,
         text_size=BLOCK_TEXT_SIZE) {
         
-        let {x, y} = this.get_random_loc();
-        this.x = x;
-        this.y = y;
-
-        this.manager = manager;
+        this.game = game;
         this.word = word;
         this.block_speed = block_speed;
         this.text_size = text_size;
+
+        let {x, y} = this.get_random_loc();
+        this.x = x;
+        this.y = y;
     }
 
     get_random_loc() {
-        let x = random(BLOCK_WIDTH / 2, BOARD_WIDTH - BLOCK_WIDTH / 2);
+        let board_width = this.game.board.width;
+        let board_height = this.game.board.height;
+        let x = random(BLOCK_WIDTH / 2, board_width - BLOCK_WIDTH / 2);
         return {x, y: -1 * BLOCK_HEIGHT / 2};
     }
 

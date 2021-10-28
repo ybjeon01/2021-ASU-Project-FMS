@@ -4,7 +4,7 @@ class Game {
     this.board = new Board(windowWidth, windowHeight)
 
     this.score_area = new ScoreArea();
-    this.block_manager = new BlockManager(this.score_area);
+    this.block_manager = new BlockManager(this);
     this.input_area = new InputArea(this.block_manager);
   }
 
@@ -58,9 +58,11 @@ let game = undefined;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   frameRate(60);
-
+  debugger;
+  console.log("working");
   game = new Game();
   game.reset();
+
 }
 
 function draw() {
