@@ -1,8 +1,8 @@
 var circleSize, approachSize, accuracy, approachRate, approachSizeRate, radius, x, y, circleColor, number, time, isActive;
 
-function Circle(circleSize, accuracy, approachRate, x, y, color, number, time) {
+function Circle(circleSize, accuracy, approachRate, x, y, color, number, time, parentWidth) {
     this.circleSize = circleSize;
-    this.radius = (54.4 - 4.48 * this.circleSize) * 7;
+    this.radius = (parentWidth/16)*(1-(0.7*(circleSize-5)/5));
     this.accuracy = accuracy;
     this.approachRate = approachRate;
     this.approachSize = this.radius * 2;

@@ -56,17 +56,17 @@ function createParticle() {
 function addCircle(x, y, diameter, diameter2, color, number) {
   imageMode(CENTER);
   tint(color.r, color.g, color.b);
-  image(circleImg, x, y, diameter, diameter);
+  image(circleImg, x, y, diameter*2, diameter*2);
   tint(255,255,255);
-  image(circleOverlayImg, x, y, diameter, diameter);
+  image(circleOverlayImg, x, y, diameter*2, diameter*2);
   tint(color.r, color.g, color.b);
-  image(approachCircleImg, x, y, diameter2, diameter2);
+  image(approachCircleImg, x, y, diameter2*2, diameter2*2);
   tint(255,255,255);
   textAlign(CENTER, CENTER);
   strokeWeight(3);
   stroke(0);
   fill(255);
-  textSize(diameter / 2);
+  textSize(diameter);
   text(number, x, y);
 }
 
@@ -101,6 +101,8 @@ function preload() {
 function setup() {
   canvas = createCanvas(parentWidth, parentHeight);
 
+  fullscreen(true);
+
   isPlaying = true;
 
   frameRate(60);
@@ -112,12 +114,12 @@ function setup() {
   gameDisplayedScore = 0;
   combo = 1;
 
-  temp = new Circle(4, 4, 4, 50, 50, {r:77,g:139,b:217}, 1, 5);
+  temp = new Circle(4, 4, 4, 50, 50, {r:77,g:139,b:217}, 1, 5, parentWidth);
 
   console.log(temp);
 
   circles.push(temp);
-  circles.push(new Circle(4, 4, 4, 150, 250, {r:255,g:0,b:0}, 1, 7))
+  circles.push(new Circle(4, 4, 4, 150, 250, {r:255,g:0,b:0}, 1, 7, parentWidth))
 
   previousX = mouseX;
   previousY = mouseY;
@@ -311,6 +313,20 @@ function keyPressed() {
 
     case 70: // f
       fullscreen(!fullscreen());
+      break;
+
+      case 80: // p
+      if (isPlaying) { // pauses
+        song.pause();
+        frameRate(0);
+        cursor(ARROW);
+        isPlaying = false;
+      } else { // resumes
+        frameRate(60);
+        song.play();
+        noCursor();
+        isPlaying = true;
+      }
       break;
 
     default:
