@@ -59,12 +59,14 @@ function setup() {
   let width = document.documentElement.clientWidth;
   let height = document.documentElement.clientHeight;
 
-  createCanvas(width, height);
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.style('display', 'block');
+  
   frameRate(60);
 
   debugger;
   console.log("working");
-  game = new Game(width, height);
+  game = new Game(windowWidth, windowHeight);
   game.reset();
 
 }
