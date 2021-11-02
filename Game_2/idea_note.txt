@@ -10,3 +10,6 @@
   - make a normal block to hard block
 
 5. life 
+
+
+6. set game level by getting data from URL params 
