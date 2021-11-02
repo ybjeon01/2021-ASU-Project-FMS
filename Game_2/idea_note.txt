@@ -1,0 +1,12 @@
+1. item in block
+  - items
+    - hit number 1 (remove all blocks in the window)
+    - hit number 2 (slow blocks)
+    - hit number 3 (add life)
+2. speedy block
+3. hard block (enter more than 1 word to remove the block)
+4. evil block (user cannot ignore the block)
+  - screen with fog
+  - make a normal block to hard block
+
+5. life 
