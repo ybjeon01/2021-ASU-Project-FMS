@@ -13,3 +13,14 @@
 
 
 6. set game level by getting data from URL params 
+
+
+
+# todo
+
+1. fix ItemBlock
+  - cannot access this.game (super() might be the problem)
+
+2. add item to item bag
+
+3. when user hit number, 1, 2, or 3, use item

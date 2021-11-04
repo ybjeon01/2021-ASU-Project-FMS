@@ -5,7 +5,8 @@ SCORE_LOC_X = 800
 SCORE_LOC_Y = 800
 
 class ScoreArea {
-    constructor() {
+    constructor(game) {
+        this.game = game
         this.score = 0;
         this.y = SCORE_HEIGHT;
         this.x = SCORE_WIDTH;
