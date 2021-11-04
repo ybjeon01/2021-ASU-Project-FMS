@@ -17,22 +17,31 @@ let successSound, missSound;
 
 let temp;
 
-fetch("mapdata.json")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    mapdata = data;
-  });
+let isDataProcessed = false;
 
-fetch("mapping.json")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    mapping = data;
-  });
+async function getData() {
+  await fetch("mapdata.json")
+    .then(response => {
+      return response.json();
+    }).then(data => {
+      circleSize = data.circleSize;
+      accuracy = data.accuracy;
+      approachRate = data.approachRate;
+    });
 
+  await fetch("mapping.json")
+    .then(response => {
+      return response.json();
+    }).then(data => {
+      let mapping = data;
+      for (let i = 0; i < mapping.map.length; i++) {
+        let circle = new Circle(circleSize, accuracy, approachRate, mapping.map[i].X, mapping.map[i].Y, { "r": mapping.map[i].Color.r, "g": mapping.map[i].Color.g, "b": mapping.map[i].Color.b }, mapping.map[i].Number, mapping.map[i].Time, parentWidth);
+        circles.push(circle);
+      }
+    });
+
+  isDataProcessed = true;
+}
 
 // disable right click
 document.addEventListener("contextmenu", function (e) {
@@ -56,12 +65,12 @@ function createParticle() {
 function addCircle(x, y, diameter, diameter2, color, number) {
   imageMode(CENTER);
   tint(color.r, color.g, color.b);
-  image(circleImg, x, y, diameter*2, diameter*2);
-  tint(255,255,255);
-  image(circleOverlayImg, x, y, diameter*2, diameter*2);
+  image(circleImg, x, y, diameter * 2, diameter * 2);
+  tint(255, 255, 255);
+  image(circleOverlayImg, x, y, diameter * 2, diameter * 2);
   tint(color.r, color.g, color.b);
-  image(approachCircleImg, x, y, diameter2*2, diameter2*2);
-  tint(255,255,255);
+  image(approachCircleImg, x, y, diameter2 * 2, diameter2 * 2);
+  tint(255, 255, 255);
   textAlign(CENTER, CENTER);
   strokeWeight(3);
   stroke(0);
@@ -77,6 +86,7 @@ function difference(x1, y1, x2, y2) {
 }
 
 function preload() {
+
   song = loadSound('My_Love.mp3');
   backgroundImage = loadImage('cover.jpg');
 
@@ -96,28 +106,32 @@ function preload() {
   cursorTrailArray = [];
   circles = [];
   active = [];
+
+  getData();
 }
 
 function setup() {
+
+  while (!isDataProcessed) {
+    console.log("waiting for data");
+  }
+
   canvas = createCanvas(parentWidth, parentHeight);
 
   isPlaying = true;
 
   frameRate(60);
 
-  console.log(mapdata);
-  console.log(mapping);
-
   gameScore = 0;
   gameDisplayedScore = 0;
   combo = 1;
 
-  temp = new Circle(4, 4, 4, 50, 50, {r:77,g:139,b:217}, 1, 5, parentWidth);
+  temp = new Circle(4, 4, 4, 50, 50, { r: 77, g: 139, b: 217 }, 1, 5, parentWidth);
 
   console.log(temp);
 
   circles.push(temp);
-  circles.push(new Circle(4, 4, 4, 150, 250, {r:255,g:0,b:0}, 1, 7, parentWidth))
+  circles.push(new Circle(4, 4, 4, 150, 250, { r: 255, g: 0, b: 0 }, 1, 7, parentWidth))
 
   previousX = mouseX;
   previousY = mouseY;
@@ -190,7 +204,7 @@ function draw() {
   image(cursorMiddleImg, mouseX, mouseY);
 
   // FPS
-  textAlign(LEFT,TOP);
+  textAlign(LEFT, TOP);
   strokeWeight(2);
   stroke(0);
   fill(255);
@@ -199,14 +213,14 @@ function draw() {
     , 10, 10);
 
   // Score
-  textAlign(RIGHT,TOP);
+  textAlign(RIGHT, TOP);
   if (gameDisplayedScore < gameScore) {
     gameDisplayedScore += 5;
   }
   text("SCORE " + gameDisplayedScore, parentWidth - 10, 10);
 
   // Combo
-  textAlign(LEFT,BOTTOM);
+  textAlign(LEFT, BOTTOM);
   text("COMBO " + combo + "X", 10, parentHeight - 10);
 
   previousX = mouseX;
@@ -313,7 +327,7 @@ function keyPressed() {
       fullscreen(!fullscreen());
       break;
 
-      case 80: // p
+    case 80: // p
       if (isPlaying) { // pauses
         song.pause();
         frameRate(0);
