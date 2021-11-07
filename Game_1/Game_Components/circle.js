@@ -5,7 +5,7 @@ function Circle(circleSize, accuracy, approachRate, x, y, color, number, time, p
     this.radius = (parentWidth/16)*(1-(0.7*(circleSize-5)/5));
     this.accuracy = accuracy;
     this.approachRate = approachRate;
-    this.approachSize = this.radius * 2;
+    this.approachSize = this.radius * 3;
     this.approachSizeRate = circleSize * 2;
     this.x = x;
     this.y = y;
@@ -21,7 +21,7 @@ function Circle(circleSize, accuracy, approachRate, x, y, color, number, time, p
         };
 
         if (!this.isActive) {
-            this.approachSizeRate = (this.approachSize - this.radius)/(timeDiff*31);
+            this.approachSizeRate = (this.approachSize - this.radius)/(timeDiff*46);
             this.isActive = true;
         }
 
@@ -33,7 +33,8 @@ function Circle(circleSize, accuracy, approachRate, x, y, color, number, time, p
     };
 
     this.click = function (mouseX, mouseY, songTime) {
-        let distance = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
+        let distance = Math.sqrt((mouseX-x)*(mouseX-x) + (mouseY-y)*(mouseY-y));
+        // let distance = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
         if (distance <= this.radius) {
             if (Math.abs(this.time - songTime) <= 1) { // success
                 return 1;
@@ -41,7 +42,7 @@ function Circle(circleSize, accuracy, approachRate, x, y, color, number, time, p
                 console.log("Fail 1");
                 return -1;
             }
-        } else if (distance <= this.approachSize) { // fail
+        } else if (distance <= this.approachSize/2) { // fail
             console.log("Fail 2");
             return -1;
         } else { // continue

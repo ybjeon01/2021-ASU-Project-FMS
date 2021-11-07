@@ -65,12 +65,10 @@ function createParticle() {
 function addCircle(x, y, diameter, diameter2, color, number) {
   imageMode(CENTER);
   tint(color.r, color.g, color.b);
+  image(approachCircleImg, x, y, diameter2 * 2, diameter2 * 2);
   image(circleImg, x, y, diameter * 2, diameter * 2);
   tint(255, 255, 255);
   image(circleOverlayImg, x, y, diameter * 2, diameter * 2);
-  tint(color.r, color.g, color.b);
-  image(approachCircleImg, x, y, diameter2 * 2, diameter2 * 2);
-  tint(255, 255, 255);
   textAlign(CENTER, CENTER);
   strokeWeight(3);
   stroke(0);
@@ -152,7 +150,7 @@ function draw() {
 
   // Circles
   for (let i = 0; i < circles.length; i++) {
-    if (currentTime > (circles[i].time - 2)) {
+    if (currentTime > (circles[i].time - 3)) {
       active.push(circles[i]);
       circles.splice(i, 1);
     }
@@ -215,7 +213,7 @@ function draw() {
   // Score
   textAlign(RIGHT, TOP);
   if (gameDisplayedScore < gameScore) {
-    gameDisplayedScore += 5;
+    gameDisplayedScore += 10;
   }
   text("SCORE " + gameDisplayedScore, parentWidth - 10, 10);
 
