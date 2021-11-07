@@ -124,13 +124,6 @@ function setup() {
   gameDisplayedScore = 0;
   combo = 1;
 
-  temp = new Circle(4, 4, 4, 50, 50, { r: 77, g: 139, b: 217 }, 1, 5, parentWidth);
-
-  console.log(temp);
-
-  circles.push(temp);
-  circles.push(new Circle(4, 4, 4, 150, 250, { r: 255, g: 0, b: 0 }, 1, 7, parentWidth))
-
   previousX = mouseX;
   previousY = mouseY;
 
