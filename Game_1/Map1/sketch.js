@@ -35,7 +35,11 @@ async function getData() {
     }).then(data => {
       let mapping = data;
       for (let i = 0; i < mapping.map.length; i++) {
-        let circle = new Circle(circleSize, accuracy, approachRate, mapping.map[i].X, mapping.map[i].Y, { "r": mapping.map[i].Color.r, "g": mapping.map[i].Color.g, "b": mapping.map[i].Color.b }, mapping.map[i].Number, mapping.map[i].Time, parentWidth);
+        let circle = new Circle(circleSize, accuracy, approachRate, mapping.map[i].X, mapping.map[i].Y, {
+          "r": mapping.map[i].Color.r,
+          "g": mapping.map[i].Color.g,
+          "b": mapping.map[i].Color.b
+        }, mapping.map[i].Number, mapping.map[i].Time, parentWidth);
         circles.push(circle);
       }
     });
@@ -59,7 +63,14 @@ function createParticle() {
   xVel *= Math.random() * 2;
   transparency = Math.floor(Math.random() * 127);
   yVel = 5 + (Math.random() * 2 - 1);
-  return { mouseX: newX, mouseY, xVel, yVel, lifetime: 50, transparency };
+  return {
+    mouseX: newX,
+    mouseY,
+    xVel,
+    yVel,
+    lifetime: 50,
+    transparency
+  };
 }
 
 function addCircle(x, y, diameter, diameter2, color, number) {
@@ -163,7 +174,11 @@ function draw() {
     cursorTrailArray.shift();
   }
 
-  cursorTrailArray.push({ mouseX, mouseY, visibility: 255 });
+  cursorTrailArray.push({
+    mouseX,
+    mouseY,
+    visibility: 255
+  });
 
   cursorTrailArray.forEach(element => {
     tint(255, Math.floor(element.visibility));
@@ -200,8 +215,9 @@ function draw() {
   stroke(0);
   fill(255);
   textSize(26);
-  text(frameRate().toLocaleString(undefined, { maximumFractionDigits: 0 })
-    , 10, 10);
+  text(frameRate().toLocaleString(undefined, {
+    maximumFractionDigits: 0
+  }), 10, 10);
 
   // Score
   textAlign(RIGHT, TOP);
@@ -244,8 +260,7 @@ function mousePressed(event) {
 
   if (event.button === 0) {
     isLeftClick = true;
-  }
-  else if (event.button === 2) {
+  } else if (event.button === 2) {
     isRightClick = true;
   }
   particleArray.push(createParticle());
@@ -254,8 +269,7 @@ function mousePressed(event) {
 function mouseReleased(event) {
   if (event.button === 0) {
     isLeftClick = false;
-  }
-  else if (event.button === 2) {
+  } else if (event.button === 2) {
     isRightClick = false;
   }
 }

@@ -1,18 +1,20 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%
-  }
-  canvas {
-    display: block;
-  }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%
+}
+
+canvas {
+  display: block;
+}
 
 #tutorial-video {
   height: 70%;
   text-align: center;
 }
 
-#tutorial-video > video {
+#tutorial-video>video {
   height: 100%;
 }
 
@@ -21,26 +23,26 @@ html, body {
   text-align: center;
 }
 
-#start > a {
+#start>a {
   color: #0060B6;
   text-decoration: none;
   font-size: 5em;
 }
 
-#start > a:hover {
-  color:#00A0C6; 
-  text-decoration:none; 
-  cursor:pointer;  
+#start>a:hover {
+  color: #00A0C6;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-#home > a {
+#home>a {
   color: #0060B6;
   text-decoration: none;
   font-size: 3em;
 }
 
-#home > a:hover {
-  color:#00A0C6; 
-  text-decoration:none; 
-  cursor:pointer;  
+#home>a:hover {
+  color: #00A0C6;
+  text-decoration: none;
+  cursor: pointer;
 }
