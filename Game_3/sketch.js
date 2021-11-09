@@ -4,19 +4,43 @@ var parentWidth = canvasDiv.offsetWidth;
 var parentHeight = canvasDiv.offsetHeight;
 var gameOver = false;
 var gameOverScreenEnabled = false;
-
+var score = 0;
 
 var bird;
 var pipes = [];
 
+let frames = [];
+let numFrames = 19   ;
+let x, y;
+let whichFrame = 0;
+
+function preload() {
+  for (let i = 0; i < numFrames; i++)
+  {
+    let filename = 'birdAnimation/' + i + '.png';
+    let frame = loadImage(filename);
+    frames.push(frame);
+  }
+}
+
 function setup() {
-  createCanvas(parentWidth, parentHeight);
+  
+  createCanvas(parentWidth, parentHeight); 
   bird = new Bird();
   pipes.push(new Pipe());
+  scoreSound = loadSound('ScoreSoundEffect.mp3');
 
 }
 
 function draw() {
+  background(61, 72, 73);
+
+ 
+
+  if(whichFrame === frames.length)
+  {
+    whichFrame = 0;
+  }
 
   if(gameOver)
   {
@@ -25,16 +49,23 @@ function draw() {
       fill(0,0,0,150);
       rect(0, 0, parentWidth, parentHeight);
       gameOverScreenEnabled = true;
-      button = createButton('Restart');
-      button.position(parentWidth / 2 - 100, parentHeight / 2);
-      button.size(200,50);
-      button.mousePressed(restartGame)
-    }
 
+      restartButton = createButton('Restart');
+      restartButton.position(parentWidth / 2 - 200, parentHeight / 3);
+      restartButton.size(400,100);
+      restartButton.mousePressed(restartGame)
+
+      mainMenuButton = createButton('Main Menu');
+      mainMenuButton.position(parentWidth / 2 - 200, parentHeight / 2);
+      mainMenuButton.size(400,100);
+      mainMenuButton.mousePressed(restartGame)
+    }
   }
   else
   {
-    background(50);
+    imageMode(CENTER);
+    image(frames[whichFrame], bird.x, bird.y );
+    whichFrame += 1;
 
     for (var i = pipes.length-1; i >= 0; i--) {
       pipes[i].show();
@@ -47,6 +78,12 @@ function draw() {
       if (pipes[i].offscreen()) {
         pipes.splice(i, 1);
       }
+
+      if (pipes[i].birdPasses(bird))
+      {
+        this.score = this.score + 1;
+        scoreSound.play();
+      }
     }
 
     bird.update();
@@ -56,6 +93,9 @@ function draw() {
       pipes.push(new Pipe());
     }
   }
+  textSize(100);
+  text(this.score, parentWidth - 180, parentHeight / 5);
+  fill(0, 102, 153);
 
 }
 
