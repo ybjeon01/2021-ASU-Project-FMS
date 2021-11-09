@@ -15,7 +15,9 @@ let approachCircleImg, circleImg, circleOverlayImg;
 
 let successSound, missSound;
 
-let temp;
+let circlesNum, clickedCircles, mapAcc, displayedMapAcc;
+
+let isMuted = false;
 
 let isDataProcessed = false;
 
@@ -133,10 +135,16 @@ function setup() {
 
   gameScore = 0;
   gameDisplayedScore = 0;
-  combo = 1;
+  combo = 0;
 
   previousX = mouseX;
   previousY = mouseY;
+
+  circlesNum = 0;
+  clickedCircles = 0;
+  displayedMapAcc = 100;
+
+  song.onended(onSongEnd);
 
   noCursor();
   song.play();
@@ -145,10 +153,6 @@ function setup() {
 function draw() {
   imageMode(CORNER);
   background(backgroundImage);
-
-  if (gameScore < 1000) {
-    gameScore += 100;
-  }
 
   let currentTime = song.currentTime();
 
@@ -164,6 +168,7 @@ function draw() {
     let response = active[i].update(currentTime);
     if (response === -1) {
       active.splice(i, 1);
+      circlesNum++;
       missSound.play();
     }
   }
@@ -222,9 +227,31 @@ function draw() {
   // Score
   textAlign(RIGHT, TOP);
   if (gameDisplayedScore < gameScore) {
-    gameDisplayedScore += 10;
+    gameDisplayedScore += Math.floor(Math.random() * 100);
+  }
+
+  if (gameDisplayedScore > gameScore) {
+    gameDisplayedScore = gameScore;
   }
   text("SCORE " + gameDisplayedScore, parentWidth - 10, 10);
+
+  // Accuracy
+  if (circlesNum > 0) {
+    mapAcc = Math.floor((clickedCircles / circlesNum) * 10000) / 100;
+  } else {
+    mapAcc = 100;
+  }
+
+  if (displayedMapAcc < mapAcc) {
+    displayedMapAcc += 0.2 * (mapAcc - displayedMapAcc);
+  } else if (displayedMapAcc > mapAcc) {
+    displayedMapAcc -= 0.2 * (displayedMapAcc - mapAcc);
+  }
+
+  text(displayedMapAcc.toLocaleString(undefined, {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2
+  }) + "%", parentWidth - 10, 40);
 
   // Combo
   textAlign(LEFT, BOTTOM);
@@ -241,19 +268,37 @@ function onResize() {
   resizeCanvas(parentWidth, parentHeight); // resize the window
 }
 
+function onSongEnd() {
+  if (!song.isPaused()) { // playing or ended
+    frameRate(0);
+    song.stop();
+    song.disconnect();
+    isPlaying = false;
+
+    document.getElementById("defaultCanvas0").style.display = "none";
+    document.getElementById("result_screen").style.display = "grid";
+    document.getElementById("result_score").innerHTML = gameScore + " points";
+    document.getElementById("result_accuracy").innerHTML = mapAcc + "%";
+    document.getElementById("result_combo").innerHTML = combo + "X";
+  }
+}
+
 function mousePressed(event) {
   for (let i = 0; i < active.length; i++) {
     let clickData = active[i].click(mouseX, mouseY, song.currentTime());
     if (clickData === -1) { // fail
       active.splice(i, 1);
       missSound.play();
-      combo = 1;
+      combo = 0;
+      circlesNum++;
       break;
     } else if (clickData === 1) { // success
       active.splice(i, 1);
       successSound.play();
-      gameScore += 300 * combo;
+      gameScore += 300 * (combo + 1);
       combo++;
+      clickedCircles++;
+      circlesNum++;
       break;
     }
   }
@@ -283,12 +328,15 @@ function keyPressed() {
           active.splice(i, 1);
           missSound.play();
           combo = 1;
+          circlesNum++;
           break;
         } else if (clickData === 1) { // success
           active.splice(i, 1);
           successSound.play();
-          gameScore += 300 * combo;
+          gameScore += 300 * (combo + 1);
           combo++;
+          clickedCircles++;
+          circlesNum++;
           break;
         }
       }
@@ -306,8 +354,9 @@ function keyPressed() {
         } else if (clickData === 1) { // success
           active.splice(i, 1);
           successSound.play();
-          gameScore += 300 * combo;
+          gameScore += 300 * (combo + 1);
           combo++;
+          clickedCircles++;
           break;
         }
       }
@@ -343,6 +392,16 @@ function keyPressed() {
         song.play();
         noCursor();
         isPlaying = true;
+      }
+      break;
+
+    case 77: // m
+      if (isMuted) { // unmutes
+        song.setVolume(1);
+        isMuted = false;
+      } else { // mutes
+        song.setVolume(0);
+        isMuted = true;
       }
       break;
 

@@ -6,4 +6,11 @@ html, body {
   canvas {
     display: block;
   }
+
+  .result {
+    display: none;
+    place-items: center;
+    font-size: 2em;
+    font-weight: bold;
+  }
   
