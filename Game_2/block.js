@@ -65,7 +65,6 @@ class BlockManager {
     get_ramodn_block_with_weights() {
         let probability = 100;
         let loc = Math.floor(Math.random() * probability);
-        console.log(loc);
 
         if (0 <= loc && loc < 30) {
             return new SpeedBlock(
@@ -138,24 +137,30 @@ class BlockManager {
     // params:
     //   text: text of a block to search
     // return:
-    //   true on removing block from the list
-    //   false when there is not block containg the text or the block 
-    //   does not allow to remove itself from array.
+    //   number of broken blocks
     break_block(text) {
+        let old_array = this.used_blocks;
         let new_array = []
-
         // later move this code to a function in block object. "can_be_broken()"
-        this.used_blocks.forEach(block => {
+
+        for (let i = 0; i < old_array.length; i++) {
+            let block = old_array[i];
             if (!block.break(text)) {
                 new_array.push(block);
-            } 
-        });
+            }
+            else {
+                if (block instanceof ItemBlock) {
+                    block.callback();
+                    return old_array.length;
+                }
+            }
+        }
 
         if (new_array.length !== this.used_blocks.length) {
             this.used_blocks = new_array;
-            return true;
+            return new_array.length;
         }
-        return false;
+        return 0;
     }
 }
 
@@ -270,8 +275,8 @@ class ItemBlock extends Block {
     block_color = [14, 154, 167];
     text_color = [200, 200, 200];
 
-    constructor() {
-        super();
+    constructor(game, word) {
+        super(game, word);
         
         let {name, callback} = this.get_random_item();
         this.item_name = name;
@@ -288,7 +293,7 @@ class ItemBlock extends Block {
     get_random_item() {
         return {
             "name": "remove",
-            "callback": this.remove_all
+            "callback": ItemBlock.remove_all
         };
     }
 
