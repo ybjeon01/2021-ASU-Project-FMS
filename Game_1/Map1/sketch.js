@@ -168,8 +168,9 @@ function draw() {
     let response = active[i].update(currentTime);
     if (response === -1) {
       active.splice(i, 1);
-      circlesNum++;
       missSound.play();
+      combo = 0;
+      circlesNum++;
     }
   }
 
@@ -227,13 +228,13 @@ function draw() {
   // Score
   textAlign(RIGHT, TOP);
   if (gameDisplayedScore < gameScore) {
-    gameDisplayedScore += Math.floor(Math.random() * 100);
+    gameDisplayedScore += Math.floor(Math.random() * (gameScore - gameDisplayedScore) + 1);
   }
 
-  if (gameDisplayedScore > gameScore) {
+  if (gameDisplayedScore >= gameScore) {
     gameDisplayedScore = gameScore;
   }
-  text("SCORE " + gameDisplayedScore, parentWidth - 10, 10);
+  text("SCORE " + gameDisplayedScore.toLocaleString(undefined), parentWidth - 10, 10);
 
   // Accuracy
   if (circlesNum > 0) {
@@ -277,7 +278,7 @@ function onSongEnd() {
 
     document.getElementById("defaultCanvas0").style.display = "none";
     document.getElementById("result_screen").style.display = "grid";
-    document.getElementById("result_score").innerHTML = gameScore + " points";
+    document.getElementById("result_score").innerHTML = gameScore.toLocaleString(undefined) + " points";
     document.getElementById("result_accuracy").innerHTML = mapAcc + "%";
     document.getElementById("result_combo").innerHTML = combo + "X";
   }
@@ -327,7 +328,7 @@ function keyPressed() {
         if (clickData === -1) { // fail
           active.splice(i, 1);
           missSound.play();
-          combo = 1;
+          combo = 0;
           circlesNum++;
           break;
         } else if (clickData === 1) { // success
@@ -349,7 +350,7 @@ function keyPressed() {
         if (clickData === -1) { // fail
           active.splice(i, 1);
           missSound.play();
-          combo = 1;
+          combo = 0;
           break;
         } else if (clickData === 1) { // success
           active.splice(i, 1);
@@ -403,6 +404,10 @@ function keyPressed() {
         song.setVolume(0);
         isMuted = true;
       }
+      break;
+
+    case 81: // q
+      song.stop(); // exit map
       break;
 
     default:
