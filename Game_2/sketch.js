@@ -71,7 +71,7 @@ class Game {
       }
     }
     else {
-      this.input_area.add_input(String.fromCharCode(key_code));
+      // this.input_area.add_input(String.fromCharCode(key_code));
     }
   }
 }
