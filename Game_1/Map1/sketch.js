@@ -101,17 +101,17 @@ function preload() {
   song = loadSound('My_Love.mp3');
   backgroundImage = loadImage('cover.jpg');
 
-  cursorImg = loadImage('../Game_Components/assets/cursor.png');
-  cursorMiddleImg = loadImage('../Game_Components/assets/cursormiddle.png');
-  cursorTrail = loadImage('../Game_Components/assets/cursortrail.png');
-  particleImg = loadImage('../Game_Components/assets/star.png');
-  particleImg2 = loadImage('../Game_Components/assets/star2.png');
-  approachCircleImg = loadImage('../Game_Components/assets/approachcircle.png');
-  circleImg = loadImage('../Game_Components/assets/hitcircle.png');
-  circleOverlayImg = loadImage('../Game_Components/assets/hitcircleoverlay.png');
+  cursorImg = loadImage('../Game_Components/cursor.png');
+  cursorMiddleImg = loadImage('../Game_Components/cursormiddle.png');
+  cursorTrail = loadImage('../Game_Components/cursortrail.png');
+  particleImg = loadImage('../Game_Components/star.png');
+  particleImg2 = loadImage('../Game_Components/star2.png');
+  approachCircleImg = loadImage('../Game_Components/approachcircle.png');
+  circleImg = loadImage('../Game_Components/hitcircle.png');
+  circleOverlayImg = loadImage('../Game_Components/hitcircleoverlay.png');
 
-  successSound = loadSound('../Game_Components/assets/drum-hitnormal.wav');
-  missSound = loadSound('../Game_Components/assets/combobreak.mp3');
+  successSound = loadSound('../Game_Components/drum-hitnormal.wav');
+  missSound = loadSound('../Game_Components/combobreak.mp3');
 
   particleArray = [];
   cursorTrailArray = [];
