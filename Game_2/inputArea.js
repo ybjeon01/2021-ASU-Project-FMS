@@ -10,6 +10,7 @@ class InputArea {
         this.input = createInput('');
         this.input.position(x, y);
         this.input.size(size, 30);
+        this.input.elt.focus();
     }
 
     // initialize input area before starting a game
