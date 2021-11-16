@@ -31,7 +31,7 @@ class Game {
     }
     else {
       this.board.draw();
-      this.input_area.draw();
+      // this.input_area.draw();
 
       this.block_manager.drop_from_the_sky();
       let hit_bottom = this.block_manager.update_and_draw();
