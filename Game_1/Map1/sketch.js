@@ -1,4 +1,4 @@
-let mapdata, mapping, canvas, backgroundImage, isPlaying, song;
+let mapdata, mapping, canvas, backgroundImage, isPlaying, song, isRightClick, isLeftClick;
 let circles; // array of circles
 let active; // array of active circles
 const canvasDiv = document.getElementById('myCanvas');
@@ -15,24 +15,39 @@ let approachCircleImg, circleImg, circleOverlayImg;
 
 let successSound, missSound;
 
-let temp;
+let circlesNum, clickedCircles, mapAcc, displayedMapAcc;
 
-fetch("mapdata.json")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    mapdata = data;
-  });
+let isMuted = false;
 
-fetch("mapping.json")
-  .then(response => {
-    return response.json();
-  })
-  .then(data => {
-    mapping = data;
-  });
+let isDataProcessed = false;
 
+async function getData() {
+  await fetch("mapdata.json")
+    .then(response => {
+      return response.json();
+    }).then(data => {
+      circleSize = data.circleSize;
+      accuracy = data.accuracy;
+      approachRate = data.approachRate;
+    });
+
+  await fetch("mapping.json")
+    .then(response => {
+      return response.json();
+    }).then(data => {
+      let mapping = data;
+      for (let i = 0; i < mapping.map.length; i++) {
+        let circle = new Circle(circleSize, accuracy, approachRate, mapping.map[i].X, mapping.map[i].Y, {
+          "r": mapping.map[i].Color.r,
+          "g": mapping.map[i].Color.g,
+          "b": mapping.map[i].Color.b
+        }, mapping.map[i].Number, mapping.map[i].Time, parentWidth);
+        circles.push(circle);
+      }
+    });
+
+  isDataProcessed = true;
+}
 
 // disable right click
 document.addEventListener("contextmenu", function (e) {
@@ -42,31 +57,36 @@ document.addEventListener("contextmenu", function (e) {
 function createParticle() {
   newX = mouseX + (Math.random() * 10 - 5);
   xVel = 0;
-  if (keyIsDown(88) || mouseButton === RIGHT) {
+  if (keyIsDown(88) || isRightClick) {
     xVel = 5;
-  } else if (keyIsDown(90) || mouseButton === LEFT) {
+  } else if (keyIsDown(90) || isLeftClick) {
     xVel = -5;
   }
   xVel *= Math.random() * 2;
   transparency = Math.floor(Math.random() * 127);
   yVel = 5 + (Math.random() * 2 - 1);
-  return { mouseX: newX, mouseY, xVel, yVel, lifetime: 50, transparency };
+  return {
+    mouseX: newX,
+    mouseY,
+    xVel,
+    yVel,
+    lifetime: 50,
+    transparency
+  };
 }
 
 function addCircle(x, y, diameter, diameter2, color, number) {
   imageMode(CENTER);
   tint(color.r, color.g, color.b);
-  image(circleImg, x, y, diameter, diameter);
-  tint(255,255,255);
-  image(circleOverlayImg, x, y, diameter, diameter);
-  tint(color.r, color.g, color.b);
-  image(approachCircleImg, x, y, diameter2, diameter2);
-  tint(255,255,255);
+  image(approachCircleImg, x, y, diameter2 * 2, diameter2 * 2);
+  image(circleImg, x, y, diameter * 2, diameter * 2);
+  tint(255, 255, 255);
+  image(circleOverlayImg, x, y, diameter * 2, diameter * 2);
   textAlign(CENTER, CENTER);
   strokeWeight(3);
   stroke(0);
   fill(255);
-  textSize(diameter / 2);
+  textSize(diameter);
   text(number, x, y);
 }
 
@@ -77,6 +97,7 @@ function difference(x1, y1, x2, y2) {
 }
 
 function preload() {
+
   song = loadSound('My_Love.mp3');
   backgroundImage = loadImage('cover.jpg');
 
@@ -96,31 +117,34 @@ function preload() {
   cursorTrailArray = [];
   circles = [];
   active = [];
+
+  getData();
 }
 
 function setup() {
+
+  while (!isDataProcessed) {
+    console.log("waiting for data");
+  }
+
   canvas = createCanvas(parentWidth, parentHeight);
 
   isPlaying = true;
 
   frameRate(60);
 
-  console.log(mapdata);
-  console.log(mapping);
-
   gameScore = 0;
   gameDisplayedScore = 0;
-  combo = 1;
-
-  temp = new Circle(4, 4, 4, 50, 50, {r:77,g:139,b:217}, 1, 5);
-
-  console.log(temp);
-
-  circles.push(temp);
-  circles.push(new Circle(4, 4, 4, 150, 250, {r:255,g:0,b:0}, 1, 7))
+  combo = 0;
 
   previousX = mouseX;
   previousY = mouseY;
+
+  circlesNum = 0;
+  clickedCircles = 0;
+  displayedMapAcc = 100;
+
+  song.onended(onSongEnd);
 
   noCursor();
   song.play();
@@ -130,15 +154,11 @@ function draw() {
   imageMode(CORNER);
   background(backgroundImage);
 
-  if (gameScore < 1000) {
-    gameScore += 100;
-  }
-
   let currentTime = song.currentTime();
 
   // Circles
   for (let i = 0; i < circles.length; i++) {
-    if (currentTime > (circles[i].time - 2)) {
+    if (currentTime > (circles[i].time - 3)) {
       active.push(circles[i]);
       circles.splice(i, 1);
     }
@@ -149,6 +169,8 @@ function draw() {
     if (response === -1) {
       active.splice(i, 1);
       missSound.play();
+      combo = 0;
+      circlesNum++;
     }
   }
 
@@ -158,7 +180,11 @@ function draw() {
     cursorTrailArray.shift();
   }
 
-  cursorTrailArray.push({ mouseX, mouseY, visibility: 255 });
+  cursorTrailArray.push({
+    mouseX,
+    mouseY,
+    visibility: 255
+  });
 
   cursorTrailArray.forEach(element => {
     tint(255, Math.floor(element.visibility));
@@ -172,12 +198,12 @@ function draw() {
   particleArray.forEach(element => {
     element.mouseX += element.xVel;
     tint(255, element.transparency);
-    image(particleImg, element.mouseX, element.mouseY);
-    image(particleImg2, element.mouseX, element.mouseY);
+    image(particleImg, element.mouseX, element.mouseY, 30, 30);
+    image(particleImg2, element.mouseX, element.mouseY, 30, 30);
     element.mouseY += yVel;
     element.xVel /= 1.04;
     element.lifetime--;
-    if (element.lifetime === 0) {
+    if (element.lifetime <= 0) {
       index = particleArray.indexOf(element);
       if (index > -1) {
         particleArray.splice(index, 1);
@@ -190,23 +216,46 @@ function draw() {
   image(cursorMiddleImg, mouseX, mouseY);
 
   // FPS
-  textAlign(LEFT,TOP);
+  textAlign(LEFT, TOP);
   strokeWeight(2);
   stroke(0);
   fill(255);
   textSize(26);
-  text(frameRate().toLocaleString(undefined, { maximumFractionDigits: 0 })
-    , 10, 10);
+  text(frameRate().toLocaleString(undefined, {
+    maximumFractionDigits: 0
+  }), 10, 10);
 
   // Score
-  textAlign(RIGHT,TOP);
+  textAlign(RIGHT, TOP);
   if (gameDisplayedScore < gameScore) {
-    gameDisplayedScore += 5;
+    gameDisplayedScore += Math.floor(Math.random() * (gameScore - gameDisplayedScore) + 1);
   }
-  text("SCORE " + gameDisplayedScore, parentWidth - 10, 10);
+
+  if (gameDisplayedScore >= gameScore) {
+    gameDisplayedScore = gameScore;
+  }
+  text("SCORE " + gameDisplayedScore.toLocaleString(undefined), parentWidth - 10, 10);
+
+  // Accuracy
+  if (circlesNum > 0) {
+    mapAcc = Math.floor((clickedCircles / circlesNum) * 10000) / 100;
+  } else {
+    mapAcc = 100;
+  }
+
+  if (displayedMapAcc < mapAcc) {
+    displayedMapAcc += 0.2 * (mapAcc - displayedMapAcc);
+  } else if (displayedMapAcc > mapAcc) {
+    displayedMapAcc -= 0.2 * (displayedMapAcc - mapAcc);
+  }
+
+  text(displayedMapAcc.toLocaleString(undefined, {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2
+  }) + "%", parentWidth - 10, 40);
 
   // Combo
-  textAlign(LEFT,BOTTOM);
+  textAlign(LEFT, BOTTOM);
   text("COMBO " + combo + "X", 10, parentHeight - 10);
 
   previousX = mouseX;
@@ -220,24 +269,55 @@ function onResize() {
   resizeCanvas(parentWidth, parentHeight); // resize the window
 }
 
-function mouseClicked() {
+function onSongEnd() {
+  if (!song.isPaused()) { // playing or ended
+    frameRate(0);
+    song.stop();
+    song.disconnect();
+    isPlaying = false;
+
+    document.getElementById("defaultCanvas0").style.display = "none";
+    document.getElementById("result_screen").style.display = "grid";
+    document.getElementById("result_score").innerHTML = gameScore.toLocaleString(undefined) + " points";
+    document.getElementById("result_accuracy").innerHTML = mapAcc + "%";
+    document.getElementById("result_combo").innerHTML = combo + "X";
+  }
+}
+
+function mousePressed(event) {
   for (let i = 0; i < active.length; i++) {
     let clickData = active[i].click(mouseX, mouseY, song.currentTime());
     if (clickData === -1) { // fail
       active.splice(i, 1);
       missSound.play();
-      combo = 1;
+      combo = 0;
+      circlesNum++;
       break;
     } else if (clickData === 1) { // success
       active.splice(i, 1);
       successSound.play();
-      gameScore += 300 * combo;
+      gameScore += 300 * (combo + 1);
       combo++;
+      clickedCircles++;
+      circlesNum++;
       break;
     }
   }
 
+  if (event.button === 0) {
+    isLeftClick = true;
+  } else if (event.button === 2) {
+    isRightClick = true;
+  }
   particleArray.push(createParticle());
+}
+
+function mouseReleased(event) {
+  if (event.button === 0) {
+    isLeftClick = false;
+  } else if (event.button === 2) {
+    isRightClick = false;
+  }
 }
 
 function keyPressed() {
@@ -248,13 +328,16 @@ function keyPressed() {
         if (clickData === -1) { // fail
           active.splice(i, 1);
           missSound.play();
-          combo = 1;
+          combo = 0;
+          circlesNum++;
           break;
         } else if (clickData === 1) { // success
           active.splice(i, 1);
           successSound.play();
-          gameScore += 300 * combo;
+          gameScore += 300 * (combo + 1);
           combo++;
+          clickedCircles++;
+          circlesNum++;
           break;
         }
       }
@@ -267,13 +350,14 @@ function keyPressed() {
         if (clickData === -1) { // fail
           active.splice(i, 1);
           missSound.play();
-          combo = 1;
+          combo = 0;
           break;
         } else if (clickData === 1) { // success
           active.splice(i, 1);
           successSound.play();
-          gameScore += 300 * combo;
+          gameScore += 300 * (combo + 1);
           combo++;
+          clickedCircles++;
           break;
         }
       }
@@ -296,6 +380,34 @@ function keyPressed() {
 
     case 70: // f
       fullscreen(!fullscreen());
+      break;
+
+    case 80: // p
+      if (isPlaying) { // pauses
+        song.pause();
+        frameRate(0);
+        cursor(ARROW);
+        isPlaying = false;
+      } else { // resumes
+        frameRate(60);
+        song.play();
+        noCursor();
+        isPlaying = true;
+      }
+      break;
+
+    case 77: // m
+      if (isMuted) { // unmutes
+        song.setVolume(1);
+        isMuted = false;
+      } else { // mutes
+        song.setVolume(0);
+        isMuted = true;
+      }
+      break;
+
+    case 81: // q
+      song.stop(); // exit map
       break;
 
     default:

@@ -1,9 +1,47 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-  }
-  canvas {
-    display: block;
-  }
-  
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+canvas {
+  display: block;
+}
+
+.result {
+  height: 100%;
+  background-color: #202225;
+  display: none;
+  place-items: center;
+  font-size: 2em;
+  font-weight: bold;
+  font-family: "Concert One", cursive;
+  color: #fff;
+}
+
+.button {
+  place-content: center;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding-bottom: 5%;
+  background-color: #202225;
+  font-size: 1em;
+  cursor: pointer;
+  font-family: "Concert One", cursive;
+}
+
+.goback,
+.goback * {
+  border-color: violet;
+  color: white;
+}
+
+.goback:hover,
+.goback:hover * {
+  background-color: violet;
+  color: black;
+}
+
+.link {
+  text-decoration: none;
+}
