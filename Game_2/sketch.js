@@ -11,10 +11,11 @@ class Game {
       board_width,
       board_height
     );
+
     this.score_area = new ScoreArea();
     this.block_manager = new BlockManager(this);
 
-    this.input_area = new InputArea(this, 0, 0, 100);
+    this.input_area = new InputArea(this, innerWidth * 0.4, innerHeight * 0.9, 300);
     this.item_bag = new ItemBag();
   }
 
@@ -31,7 +32,7 @@ class Game {
     }
     else {
       this.board.draw();
-      // this.input_area.draw();
+      this.item_bag.draw();
 
       this.block_manager.drop_from_the_sky();
       let hit_bottom = this.block_manager.update_and_draw();
@@ -39,8 +40,6 @@ class Game {
         this.score_area.add_score(-100);
       }
       this.score_area.draw();
-
-      this.item_bag.draw();
     }
   }
 
@@ -60,18 +59,11 @@ class Game {
   }
 
   key_handler(key_code) {
-    // keycode: number 1, 2, and 3
-    if (key_code in [49, 50, 51]) {
-      // use item from item bag
-    }
     if (key_code == ENTER) {
       let num_broken_blocks = this.input_area.check_if_user_enter_right_word();
       if (num_broken_blocks > 0) {
         this.score_area.add_score(100 * num_broken_blocks);
       }
-    }
-    else {
-      // this.input_area.add_input(String.fromCharCode(key_code));
     }
   }
 }
@@ -81,8 +73,6 @@ let game = undefined;
 // The statements in the setup() function
 // execute once when the program begins
 function setup() {
-
-
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.style('display', 'block');
   frameRate(60);
