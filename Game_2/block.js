@@ -1,23 +1,25 @@
 let WORD_LIST = [
-    "Agreement", "Air", "Airport", "Alcohol", "Ambition", "Amount", "Analysis",
-    "Analyst", "Animal", "Answer", "Anxiety", "Apartment", "Book", "Boss",
-    "Bottom", "Box", "Boy", "Boyfriend", "Bread", "Breath", "Brother", "Building",
-    "Bus", "Business", "Debt", "Decision", "Definition", "Delivery", "Demand",
-    "Department", "Departure", "Depression", "Depth", "Description", "Design",
-    "Desk", "Development", "Device", "Diamond", "Difference", "Difficulty",
-    "Dinner", "Direction", "Gene", "Gift", "Girl", "Girlfriend", "Goal", 
-    "Government"
+    "agreement", "air", "airport", "alcohol", "ambition", "amount", "analysis",
+    "analyst", "animal", "answer", "anxiety", "apartment", "book", "boss",
+    "bottom", "box", "boy", "boyfriend", "bread", "breath", "brother", "building",
+    "bus", "business", "debt", "decision", "definition", "delivery", "demand",
+    "department", "departure", "depression", "depth", "description", "design",
+    "desk", "development", "device", "diamond", "difference", "difficulty",
+    "dinner", "direction", "gene", "gift", "girl", "girlfriend", "goal", 
+    "government"
   ]
   
 
 // constants for block setting
 let BLOCK_WIDTH = 100;
 let BLOCK_HEIGHT = 40;
-let BLOCK_COLOR = 100;
+let BLOCK_COLOR = [100, 100, 100];
+let BLOCK_TEXT_COLOR = [255, 255, 255];
 let BLOCK_TEXT_SIZE = 16;
 
+
 let BLOCK_DROP_INTERVAL = 1.0;
-let BLOCK_SPEED = 2.5;
+let BLOCK_SPEED = 1.5;
 let MAX_NUM_BLOCK = 15;
 
 
@@ -41,7 +43,7 @@ class BlockManager {
     reset() {
         this.last_block_drop_time = this.get_current_time_in_mill();
         for (let i = 0; i < 1; i++) {
-            this.used_blocks.push(this.get_block('test'));
+            this.used_blocks.push(this.get_ramodn_block_with_weights());
         }
     }
 
@@ -60,12 +62,32 @@ class BlockManager {
     //   type: type of a block to make
     // return:
     //   block
-    get_block(type) {
-        let new_block = new Block(
+    get_ramodn_block_with_weights() {
+        let probability = 100;
+        let loc = Math.floor(Math.random() * probability);
+
+        if (0 <= loc && loc < 30) {
+            return new SpeedBlock(
+                this.game,
+                this.get_random_word()
+            );
+        }
+        else if (30 <= loc && loc < 40) {
+            return new HardBlock(
+                this.game,
+                this.get_random_word()
+            );
+        }
+        else if (40 <= loc && loc < 55) {
+            return new ItemBlock(
+                this.game,
+                this.get_random_word()
+            );
+        }
+        return new Block(
             this.game,
             this.get_random_word()
-        )
-        return new_block
+        );
     }
 
     // add a word block to block_list that contains blocks to draw in canvas
@@ -77,14 +99,21 @@ class BlockManager {
     drop_from_the_sky() {
         let delta = this.get_current_time_in_mill() - this.last_block_drop_time;
 
-        if  (delta >= this.block_drop_interval) {
-            if (this.used_blocks.length < this.max_num_block) {
-                this.used_blocks.push(this.get_block('test'));
-                this.last_block_drop_time = this.get_current_time_in_mill();
-                return true;
-            }
+        // too early to drop blocks
+        if (delta < this.block_drop_interval) {
+            return false;
         }
-        return false;
+
+        // too many blocks on the board.
+        if (this.used_blocks.length > this.max_num_block) {
+            return false;
+        }
+
+        // choose block type with weighted probability
+        this.used_blocks.push(this.get_ramodn_block_with_weights());
+        this.last_block_drop_time = this.get_current_time_in_mill();
+        return true;
+
     }
 
     // if block is dropped below the window, return true
@@ -108,47 +137,51 @@ class BlockManager {
     // params:
     //   text: text of a block to search
     // return:
-    //   true on removing block from the list
-    //   false when there is not block containg the text or the block 
-    //   does not allow to remove itself from array.
+    //   number of broken blocks
     break_block(text) {
+        let old_array = this.used_blocks;
         let new_array = []
-
         // later move this code to a function in block object. "can_be_broken()"
-        this.used_blocks.forEach(block => {
-            if (block.word !== text) {
+
+        for (let i = 0; i < old_array.length; i++) {
+            let block = old_array[i];
+            if (!block.break(text)) {
                 new_array.push(block);
-            } 
-        });
+            }
+            else {
+                if (block instanceof ItemBlock) {
+                    block.callback();
+                    return old_array.length;
+                }
+            }
+        }
 
         if (new_array.length !== this.used_blocks.length) {
             this.used_blocks = new_array;
-            return true;
+            return new_array.length;
         }
-        return false;
+        return 0;
     }
 }
 
 
 class Block {
+    static block_type = "normal";
+
+    block_speed = 1.5;
+    block_width = 100;
+    block_height = 40;
+    block_color = [100, 100, 100];
+    text_color = [255, 255, 255];
+    text_size = 16;
+
     constructor(
         game,
-        word,
-        block_speed=BLOCK_SPEED,
-        block_width=BLOCK_WIDTH,
-        block_height=BLOCK_HEIGHT,
-        block_color=BLOCK_COLOR,
-        text_size=BLOCK_TEXT_SIZE) {
+        word
+    ) {
         
         this.game = game;
-
         this.word = word;
-        this.block_speed = block_speed;
-        this.block_width = block_width;
-        this.block_height = block_height;
-        this.block_color = block_color;
-        
-        this.text_size = text_size;
 
         let {x, y} = this.get_random_loc();
         this.x = x;
@@ -165,6 +198,15 @@ class Block {
         return {x, y: -1 * this.block_height / 2};
     }
 
+    break(name) {
+        if (this.word == name) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     // if block is out of bound, return true
     update() {
         if (this.y > this.game.board.height) {
@@ -178,10 +220,10 @@ class Block {
 
     draw() {
         rectMode(CENTER);
-        fill(this.block_color);
+        fill(...this.block_color);
         rect(this.x, this.y, this.block_width, this.block_height);
         
-        fill(255, 255, 255);
+        fill(...this.text_color);
         textSize(this.text_size);
         textAlign(CENTER, CENTER);
         text(
@@ -189,5 +231,73 @@ class Block {
             this.x,
             this.y,
         );
+    }
+}
+
+
+class SpeedBlock extends Block {
+    static block_type = "speed";
+
+    block_speed = 3.0;
+    // yellow
+    block_color = [246, 205, 97];
+    text_color = [128, 128, 128];
+}
+
+
+class HardBlock extends Block {
+    static block_type = "hard";
+    block_break_num = 2;
+
+    block_speed = 2.0;
+    // yellow
+    block_color = [0, 0, 0];
+    text_color = [255, 0, 0];
+
+    break(name) {
+        if (super.break(name)) {
+            this.block_break_num -= 1;
+            this.block_color = [150, 150, 150];
+            this.word = this.game.block_manager.get_random_word();
+        }
+        if (this.block_break_num == 0) {
+            return true;
+        }
+        return false;
+    }
+}
+
+
+class ItemBlock extends Block {
+    static block_type = "item";
+
+    // yellow
+    block_color = [14, 154, 167];
+    text_color = [200, 200, 200];
+
+    constructor(game, word) {
+        super(game, word);
+        
+        let {name, callback} = this.get_random_item();
+        this.item_name = name;
+        this.callback = callback;
+    }
+
+    break(name) {
+        if (super.break(name)) {
+            console.log(name);
+            return true;
+        }
+    }
+
+    get_random_item() {
+        return {
+            "name": "remove",
+            "callback": ItemBlock.remove_all
+        };
+    }
+
+    static remove_all() {
+        this.game.block_manager.used_blocks = [];
     }
 }
