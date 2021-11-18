@@ -1,11 +1,11 @@
 function Bird() {
-    this.y = height/2;
+    this.y = height/2 * 6;
     this.x = 64;
     
     this.timer = -1;
 
     this.gravity = 0.75;
-    this.lift = -17;
+    this.lift = -16;
     this.velocity = 0;
   
     this.show = function() {
@@ -14,7 +14,14 @@ function Bird() {
     }
   
     this.jump = function() {
-      this.velocity += this.lift;
+      if(this.velocity < 0.3)
+      {
+        this.velocity += this.lift / 1.2;
+      }
+      else
+      {
+        this.velocity += this.lift * 1.15;
+      }
     }
   
     this.update = function() {
