@@ -58,7 +58,7 @@ function draw() {
       mainMenuButton = createButton('Main Menu');
       mainMenuButton.position(parentWidth / 2 - 200, parentHeight / 2);
       mainMenuButton.size(400,100);
-      mainMenuButton.mousePressed(Restart)
+      mainMenuButton.mousePressed(returnToMainMenu)
     }
   }
   else
@@ -103,10 +103,10 @@ function restartGame()
 {
   window.location.reload();
 }
-/*function returnToMainMenu()
+function returnToMainMenu()
 {
   window.location.href = "/";
-}*/
+}
 
 function keyPressed() {
   if (key == ' ') {
