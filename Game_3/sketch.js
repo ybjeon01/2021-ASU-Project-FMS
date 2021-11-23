@@ -105,7 +105,7 @@ function restartGame()
 }
 function returnToMainMenu()
 {
-  window.location.href = "/";
+  window.location.href = "/2021-ASU-PROJECT-FMS/";
 }
 
 function keyPressed() {
