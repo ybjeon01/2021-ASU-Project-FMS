@@ -58,7 +58,7 @@ function draw() {
       mainMenuButton = createButton('Main Menu');
       mainMenuButton.position(parentWidth / 2 - 200, parentHeight / 2);
       mainMenuButton.size(400,100);
-      mainMenuButton.mousePressed(restartGame)
+      mainMenuButton.mousePressed(returnToMainMenu)
     }
   }
   else
@@ -105,7 +105,7 @@ function restartGame()
 }
 function returnToMainMenu()
 {
-  window.location.href = "https://ybjeon01.github.io/2021-ASU-PROJECT-FMS/";
+  window.location.href = "/";
 }
 
 function keyPressed() {
