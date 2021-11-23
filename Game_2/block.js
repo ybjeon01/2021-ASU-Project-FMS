@@ -26,8 +26,8 @@ let MAX_NUM_BLOCK = 15;
 class BlockManager {
     constructor(
         game,
-        max_num_block=MAX_NUM_BLOCK,
-        block_drop_interval=BLOCK_DROP_INTERVAL) {
+        block_drop_interval=BLOCK_DROP_INTERVAL,
+        max_num_block=MAX_NUM_BLOCK) {
 
         this.max_num_block = max_num_block;
         this.block_drop_interval = block_drop_interval;
