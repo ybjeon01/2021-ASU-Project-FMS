@@ -3,17 +3,18 @@ class Game {
   constructor(
     canvas,
     board_width,
-    board_height
+    board_height,
+    block_drop_speed
   ) {
     this.board = new Board(
       this,
       canvas,
       board_width,
-      board_height
+      board_height,
     );
 
     this.score_area = new ScoreArea();
-    this.block_manager = new BlockManager(this);
+    this.block_manager = new BlockManager(this, block_drop_speed);
 
     this.input_area = new InputArea(this, innerWidth * 0.4, innerHeight * 0.9, 300);
     this.item_bag = new ItemBag();
@@ -77,10 +78,14 @@ function setup() {
   canvas.style('display', 'block');
   frameRate(60);
 
+
+  let block_drop_speed = get_game_level_from_url()
+
   game = new Game(
     canvas,
     windowWidth,
-    windowHeight
+    windowHeight,
+    block_drop_speed
   );
   game.reset();
 
@@ -92,4 +97,19 @@ function draw() {
 
 function keyPressed() {
   game.key_handler(keyCode);
+}
+
+function get_game_level_from_url() {
+  let params = getURLParams();;
+  let level = params['level'] || 'easy';
+
+  if (level === 'easy') {
+    return 3;
+  }
+  else if (level === "medium") {
+    return 2;
+  }
+  else {
+    return 1;
+  }
 }

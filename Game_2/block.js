@@ -26,8 +26,8 @@ let MAX_NUM_BLOCK = 15;
 class BlockManager {
     constructor(
         game,
-        max_num_block=MAX_NUM_BLOCK,
-        block_drop_interval=BLOCK_DROP_INTERVAL) {
+        block_drop_interval=BLOCK_DROP_INTERVAL,
+        max_num_block=MAX_NUM_BLOCK) {
 
         this.max_num_block = max_num_block;
         this.block_drop_interval = block_drop_interval;
@@ -156,11 +156,10 @@ class BlockManager {
             }
         }
 
-        if (new_array.length !== this.used_blocks.length) {
+        if (new_array.length !== old_array.length) {
             this.used_blocks = new_array;
-            return new_array.length;
         }
-        return 0;
+        return old_array.length - new_array.length;
     }
 }
 
