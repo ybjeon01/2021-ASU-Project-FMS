@@ -103,6 +103,10 @@ function restartGame()
 {
   window.location.reload();
 }
+function returnToMainMenu()
+{
+  window.location.href = "https://ybjeon01.github.io/2021-ASU-PROJECT-FMS/";
+}
 
 function keyPressed() {
   if (key == ' ') {
