@@ -156,11 +156,10 @@ class BlockManager {
             }
         }
 
-        if (new_array.length !== this.used_blocks.length) {
+        if (new_array.length !== old_array.length) {
             this.used_blocks = new_array;
-            return new_array.length;
         }
-        return 0;
+        return old_array.length - new_array.length;
     }
 }
 
