@@ -1,74 +1,116 @@
+//View > Command Plalet > Open with live server or right click index.html
 var canvasDiv = document.getElementById('myCanvas');
-var parentWidth = canvasDiv.offsetWidth; // width of browser window
-var parentHeight = canvasDiv.offsetHeight; // height of browser window
-var description;
-var descriptionText = 'Game Description';
+var parentWidth = canvasDiv.offsetWidth;
+var parentHeight = canvasDiv.offsetHeight;
+var gameOver = false;
+var gameOverScreenEnabled = false;
+var score = 0;
+
+var bird;
+var pipes = [];
+
+let frames = [];
+let numFrames = 19   ;
+let x, y;
+let whichFrame = 0;
+
+function preload() {
+  for (let i = 0; i < numFrames; i++)
+  {
+    let filename = 'birdAnimation/' + i + '.png';
+    let frame = loadImage(filename);
+    frames.push(frame);
+  }
+}
 
 function setup() {
-  canvas = createCanvas(parentWidth, parentHeight);
+  
+  createCanvas(parentWidth, parentHeight); 
+  bird = new Bird();
+  pipes.push(new Pipe());
+  scoreSound = loadSound('ScoreSoundEffect.mp3');
 
-  textAlign(CENTER,CENTER);
-  description = text(descriptionText, parentWidth / 2, parentHeight - 25)
-
-  rect(0, 0, width / 2, (height - 50) / 2);
-  rect(width / 2, 0, width / 2, (height - 50) / 2);
-  rect(0, (height - 50) / 2, width / 2, (height - 50) / 2);
-  rect(width / 2, (height - 50) / 2, width / 2, (height - 50) / 2);
 }
 
 function draw() {
-  stroke('black');
-  fill('red');
-  rect(0, 0, width / 2, (height - 50) / 2);
-  fill('blue');
-  rect(width / 2, 0, width / 2, (height - 50) / 2);
-  fill('green');
-  rect(0, (height - 50) / 2, width / 2, (height - 50) / 2);
-  fill('yellow');
-  rect(width / 2, (height - 50) / 2, width / 2, (height - 50) / 2);
+  background(61, 72, 73);
 
-  fill('white');
-  noStroke();
-  rect(0, height - 50, width, 50);
+ 
 
-  if (mouseY < height - 50) { // hand is in menus
-    if (mouseY < (height - 50) / 2) { // top half
-      if (mouseX < width / 2) { // left half
-        descriptionText = 'Osu! - Aidan Labourdette\nA game where you click the circles';
-      } else {
-        descriptionText = 'Game 2';
-      }
-    } else if (mouseY < (height - 50)) { // bottom half
-      if (mouseX < width / 2) { // left half
-        descriptionText = 'Game 3';
-      } else {
-        descriptionText = 'Game 4';
-      }
-    } else {
-      descriptionText = 'Game Description';
-    }
-    cursor(HAND);
-  } else {
-    cursor(ARROW);
+  if(whichFrame === frames.length)
+  {
+    whichFrame = 0;
   }
 
-  fill('black');
-  textSize(20);
-  text(descriptionText, parentWidth / 2, parentHeight - 25)
+  if(gameOver)
+  {
+    if(!gameOverScreenEnabled)
+    {
+      fill(0,0,0,150);
+      rect(0, 0, parentWidth, parentHeight);
+      gameOverScreenEnabled = true;
+
+      restartButton = createButton('Restart');
+      restartButton.position(parentWidth / 2 - 200, parentHeight / 3);
+      restartButton.size(400,100);
+      restartButton.mousePressed(restartGame)
+
+      mainMenuButton = createButton('Main Menu');
+      mainMenuButton.position(parentWidth / 2 - 200, parentHeight / 2);
+      mainMenuButton.size(400,100);
+      mainMenuButton.mousePressed(restartGame)
+    }
+  }
+  else
+  {
+    imageMode(CENTER);
+    image(frames[whichFrame], bird.x, bird.y );
+    whichFrame += 1;
+
+    for (var i = pipes.length-1; i >= 0; i--) {
+      pipes[i].show();
+      pipes[i].update();
+
+      if (pipes[i].hits(bird)) {
+        gameOver = true;
+      }
+
+      if (pipes[i].offscreen()) {
+        pipes.splice(i, 1);
+      }
+
+      if (pipes[i].birdPasses(bird))
+      {
+        this.score = this.score + 1;
+        scoreSound.play();
+      }
+    }
+
+    bird.update();
+    bird.show();
+
+    if (frameCount % 75 == 0) {
+      pipes.push(new Pipe());
+    }
+  }
+  textSize(100);
+  text(this.score, parentWidth - 180, parentHeight / 5);
+  fill(0, 102, 153);
+
 }
 
-function mouseClicked() {
-  if (mouseY < (height - 50) / 2) { // top half
-    if (mouseX < width / 2) { // left half
-      window.location.href = 'Game_1';
-    } else {
-      window.location.href = 'Game_2';
-    }
-  } else if (mouseY < (height - 50)) { // bottom half
-    if (mouseX < width / 2) { // left half
-      window.location.href = 'Game_3';
-    } else {
-      window.location.href = 'Game_4';
-    }
+function restartGame()
+{
+  window.location.reload();
+}
+function returnToMainMenu()
+{
+  window.location.href = "/";
+}
+
+function keyPressed() {
+  if (key == ' ') {
+    bird.jump();
+    console.log("SPACE");
   }
 }
