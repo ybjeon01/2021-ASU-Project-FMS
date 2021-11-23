@@ -113,3 +113,22 @@ function get_game_level_from_url() {
     return 1;
   }
 }
+
+
+function get_score_list() {
+  return JSON.parse(localStorage.getItem('scoreList'));
+}
+
+function add_to_score_list(score) {
+  let arr = get_score_list();
+  arr.push(score);
+  arr.sort();
+  localStorage.setItem('scoreList', JSON.stringify(arr));
+}
+
+function make_score_list() {
+  let scoreList = localStorage.getItem('scoreList');
+  if (scoreList === null) {
+    localStorage.setItem('scoreList', JSON.stringify([]));
+  }
+}
