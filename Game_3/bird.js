@@ -1,5 +1,5 @@
 function Bird() {
-    this.y = height/2 * 6;
+    this.y = height/2;
     this.x = 64;
     
     this.timer = -1;
