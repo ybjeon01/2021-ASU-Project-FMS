@@ -4,7 +4,7 @@
   box-sizing: border-box;
 
   width: 100%;
-  height: 100%; 
+  height: 100%;
 }
 
 .transparent-curtain {
@@ -101,11 +101,13 @@
 }
 
 .game2 {
-  background-color: orange;
+  background-image: url("./static/imgs/game2.JPG");
+  background-size: cover;
 }
 
 .game3 {
-  background-color: yellow;
+  background-image: url("./static/imgs/game3.png");
+  background-size: cover;
 }
 
 .game4 {
