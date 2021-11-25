@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/Game_2/static/css/main.1472a3c1.chunk.css",
-    "main.js": "/Game_2/static/js/main.c17f5973.chunk.js",
-    "main.js.map": "/Game_2/static/js/main.c17f5973.chunk.js.map",
-    "runtime-main.js": "/Game_2/static/js/runtime-main.7f58b947.js",
-    "runtime-main.js.map": "/Game_2/static/js/runtime-main.7f58b947.js.map",
-    "static/js/2.5f963d98.chunk.js": "/Game_2/static/js/2.5f963d98.chunk.js",
-    "static/js/2.5f963d98.chunk.js.map": "/Game_2/static/js/2.5f963d98.chunk.js.map",
-    "index.html": "/Game_2/index.html",
-    "static/css/main.1472a3c1.chunk.css.map": "/Game_2/static/css/main.1472a3c1.chunk.css.map",
-    "static/js/2.5f963d98.chunk.js.LICENSE.txt": "/Game_2/static/js/2.5f963d98.chunk.js.LICENSE.txt",
-    "static/media/tutorial-video.1e0b8380.mp4": "/Game_2/static/media/tutorial-video.1e0b8380.mp4"
+    "main.css": "/2021-ASU-Project-FMS/Game_2/static/css/main.1472a3c1.chunk.css",
+    "main.js": "/2021-ASU-Project-FMS/Game_2/static/js/main.847bf2cb.chunk.js",
+    "main.js.map": "/2021-ASU-Project-FMS/Game_2/static/js/main.847bf2cb.chunk.js.map",
+    "runtime-main.js": "/2021-ASU-Project-FMS/Game_2/static/js/runtime-main.64cdecec.js",
+    "runtime-main.js.map": "/2021-ASU-Project-FMS/Game_2/static/js/runtime-main.64cdecec.js.map",
+    "static/js/2.5f963d98.chunk.js": "/2021-ASU-Project-FMS/Game_2/static/js/2.5f963d98.chunk.js",
+    "static/js/2.5f963d98.chunk.js.map": "/2021-ASU-Project-FMS/Game_2/static/js/2.5f963d98.chunk.js.map",
+    "index.html": "/2021-ASU-Project-FMS/Game_2/index.html",
+    "static/css/main.1472a3c1.chunk.css.map": "/2021-ASU-Project-FMS/Game_2/static/css/main.1472a3c1.chunk.css.map",
+    "static/js/2.5f963d98.chunk.js.LICENSE.txt": "/2021-ASU-Project-FMS/Game_2/static/js/2.5f963d98.chunk.js.LICENSE.txt",
+    "static/media/tutorial-video.1e0b8380.mp4": "/2021-ASU-Project-FMS/Game_2/static/media/tutorial-video.1e0b8380.mp4"
   },
   "entrypoints": [
-    "static/js/runtime-main.7f58b947.js",
+    "static/js/runtime-main.64cdecec.js",
     "static/js/2.5f963d98.chunk.js",
     "static/css/main.1472a3c1.chunk.css",
-    "static/js/main.c17f5973.chunk.js"
+    "static/js/main.847bf2cb.chunk.js"
   ]
 }
