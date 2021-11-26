@@ -9,7 +9,7 @@
 <body id="root">
   <div class="game-helper">
     <div class="tutorial">
-      <video class="tutorial-video" autoPlay muted>
+      <video id="tutorial-video" class="tutorial-video" autoPlay muted>
         <source src="" id="tutorial-video-src" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
@@ -73,10 +73,11 @@
       let selector = gsap.utils.selector("#root");
       let games = selector(".game");
 
-      let gameHelper = selector(".game-helper");
-      let gameTutorialVideo = selector("#tutorial-video-src");
-      let gamePlay = selector("#game-play-button");
-      let gameHome = selector("#game-home-button");
+      let gameHelper = selector(".game-helper")[0];
+      let gameTutorialVideo = selector("#tutorial-video")[0];
+      let gameTutorialVideoSrc = selector("#tutorial-video-src")[0];
+      let gamePlay = selector("#game-play-button")[0];
+      let gameHome = selector("#game-home-button")[0];
 
       var tl = gsap.timeline();
       tl.to([games[0], games[1], games[3], games[2]], {scale: 1.1, stagger: 0.3})
@@ -93,7 +94,7 @@
         }
       );
       // When user clicks home button, close heloper board
-      gameHome[0].addEventListener("click", () => openHelperBoard.reverse());
+      gameHome.addEventListener("click", () => openHelperBoard.reverse());
 
       games.forEach((game, idx) => {
         const hover = gsap.to(
@@ -115,10 +116,12 @@
           /* add game scoreboard code */
 
           /* add game tutorial video code */
-          gameTutorialVideo.src = "";
+          gameTutorialVideoSrc.src = "./Game_2/static/media/tutorial-video.1e0b8380.mp4";
+          gameTutorialVideo.load();
+          gameTutorialVideo.play();
 
           /* When user clicks a game play button in helper board */ 
-          gamePlay[0].addEventListener("click", () => {
+          gamePlay.addEventListener("click", () => {
             gsap.to(
               ".transparent-curtain",
               {
