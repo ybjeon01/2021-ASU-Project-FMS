@@ -6,39 +6,63 @@
   <title>Project FMS</title>
 </head>
 
-<body>
+<body id="root">
+  <div class="game-helper">
+    <div class="tutorial">
+      <video class="tutorial-video" autoPlay muted>
+        <source src="" id="tutorial-video-src" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      <div class="controllers">
+        <button id="game-play-button" class="button">
+          Play Game
+        </button>
+
+        <button id="game-home-button" class="button">
+          Home
+        </button>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <h1 class="scoreboard-title">
+        Highest Score Board
+      </h1>
+    </div>
+  </div>
+
   <div class="transparent-curtain">
   </div>
   <div class="indicator">
     hover your mouse on one of the pictures
   </div>
   <div class="game-container">
-    <a href="./Game_1" class="game game1">
+    <button href="./Game_1" id="game1" class="game game1">
       <div class="game-title">
         Game1
       </div>
-    </a>
+    </button>
 
 
-    <a href="./Game_2" class="game game2">
+    <button href="./Game_2" id="game2" class="game game2">
       <div class="game-title">
         Game2
       </div>
-    </a>
+    </button>
 
 
-    <a href="./Game_3" class="game game3">
+    <button href="./Game_3" id="game3" class="game game3">
       <div class="game-title">
         Game3
       </div>
-    </a>
+    </button>
 
 
-    <a href="./Game_4" class="game game4">
+    <button href="./Game_4" id="game4" class="game game4">
       <div class="game-title">
         Game4
       </div>
-    </a>
+    </button>
 
   </div>
 
@@ -46,10 +70,32 @@
   <script>
 
     function init() {
-      let selector = gsap.utils.selector(".game-container");
+      let selector = gsap.utils.selector("#root");
       let games = selector(".game");
 
-      games.forEach((game) => {
+      let gameHelper = selector(".game-helper");
+      let gameTutorialVideo = selector("#tutorial-video-src");
+      let gamePlay = selector("#game-play-button");
+      let gameHome = selector("#game-home-button");
+
+      var tl = gsap.timeline();
+      tl.to([games[0], games[1], games[3], games[2]], {scale: 1.1, stagger: 0.3})
+      tl.to([games[0], games[1], games[3], games[2]], {scale: 1.0, stagger: 0.3}, "<0.6")
+      tl.to(".indicator", {opacity: 1.0}, ">1")
+      tl.to(".transparent-curtain", {display: "none"});
+
+      const openHelperBoard = gsap.to(
+        gameHelper,
+        {
+          y: 0,
+          duration: 0.3,
+          paused: true
+        }
+      );
+      // When user clicks home button, close heloper board
+      gameHome[0].addEventListener("click", () => openHelperBoard.reverse());
+
+      games.forEach((game, idx) => {
         const hover = gsap.to(
           game,
           {
@@ -58,15 +104,34 @@
             paused: true
           }
         );
+
         game.addEventListener("mouseenter", () => hover.play());
         game.addEventListener("mouseleave", () => hover.reverse());
-      });
 
-      var tl = gsap.timeline();
-      tl.to([games[0], games[1], games[3], games[2]], {scale: 1.1, stagger: 0.3})
-      tl.to([games[0], games[1], games[3], games[2]], {scale: 1.0, stagger: 0.3}, "<0.6")
-      tl.to(".indicator", {opacity: 1.0}, ">1")
-      tl.to(".transparent-curtain", {display: "none"});
+        /* open helper board */
+        game.addEventListener("click", () => {
+          openHelperBoard.play()
+
+          /* add game scoreboard code */
+
+          /* add game tutorial video code */
+          gameTutorialVideo.src = "";
+
+          /* When user clicks a game play button in helper board */ 
+          gamePlay[0].addEventListener("click", () => {
+            gsap.to(
+              ".transparent-curtain",
+              {
+                display: "block",
+                backgroundColor: '#FFFFFF',
+                opacity: 1,
+                zIndex: 1000,
+                onComplete: () => window.location.href = `./Game_${idx+1}`
+              }
+            );
+          });
+        });
+      });
     }
 
     window.addEventListener("load", (e) => {init()});
