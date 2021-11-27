@@ -13,17 +13,17 @@ class ScoreArea {
     }
 
     reset() {
-        rectMode(CENTER);
-        fill(BLOCK_COLOR);
-        rect(this.x, this.y, SCORE_WIDTH, SCORE_HEIGHT);
-        fill(255, 255, 255);
+        // rectMode(CENTER);
+        // fill(BLOCK_COLOR);
+        // rect(this.x, this.y, SCORE_WIDTH, SCORE_HEIGHT);
+        // fill(255, 255, 255);
 
-        textAlign(CENTER, CENTER);
-        text(
-            "score: " + this.score,
-            this.x,
-            this.y,
-        );
+        // textAlign(CENTER, CENTER);
+        // text(
+        //     "score: " + this.score,
+        //     this.x,
+        //     this.y,
+        // );
     }
 
     add_score(score) {
