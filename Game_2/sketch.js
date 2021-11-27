@@ -53,6 +53,8 @@ class Game {
         this.pause.innerHTML = "play";
       }
     });
+
+    this.gameover_element = document.getElementById("gameover");
   }
 
   reset() {
@@ -89,18 +91,7 @@ class Game {
   }
 
   gameover() {
-    rectMode(CENTER);
-    fill(100);
-    rect(500, 500, 300, 200);
-    
-    fill(255, 255, 255);
-    textSize(16);
-    textAlign(CENTER, CENTER);
-    text(
-        "game over. refresh the page to restart",
-        500,
-        500,
-    );
+    this.gameover_element.style = "display: block";
   }
 
   key_handler(key_code) {
