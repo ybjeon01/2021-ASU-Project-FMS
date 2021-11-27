@@ -35,7 +35,23 @@ class Game {
 
         this.level_list.style = "display: none"
 
+        this.pause.style = "visibility: visible";
+
       });
+    });
+
+    this.is_paused = false;
+    this.pause = document.getElementById("pause-button");
+
+    this.pause.addEventListener("click", () => {
+      if (this.is_paused) {
+        this.is_paused = false;
+        this.pause.innerHTML = "pause";
+      }
+      else {
+        this.is_paused = true;
+        this.pause.innerHTML = "play";
+      }
     });
   }
 
@@ -48,6 +64,9 @@ class Game {
 
   run() {
     if (this.selected_level === "") {
+    }
+    else if (this.is_paused) {
+
     }
     else if (this.score_area.score < 0) {
       this.gameover();
