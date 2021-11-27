@@ -18,6 +18,25 @@ class Game {
 
     this.input_area = new InputArea(this, innerWidth * 0.4, innerHeight * 0.9, 300);
     this.item_bag = new ItemBag();
+
+    this.selected_level = "";
+    this.level_list = document.getElementById("level-list");
+    this.buttons = document.getElementsByClassName('button');
+
+    this.buttons.forEach((button, idx) => {
+      let radio = button.children[0];
+      
+      radio.addEventListener("click", () => {
+        this.selected_level = radio.value;
+        this.block_manager = new BlockManager(
+          this,
+          get_game_level_from_url(radio.value)
+        );
+
+        this.level_list.style = "display: none"
+
+      });
+    });
   }
 
   reset() {
@@ -28,7 +47,9 @@ class Game {
   }
 
   run() {
-    if (this.score_area.score < 0) {
+    if (this.selected_level === "") {
+    }
+    else if (this.score_area.score < 0) {
       this.gameover();
     }
     else {
@@ -99,9 +120,7 @@ function keyPressed() {
   game.key_handler(keyCode);
 }
 
-function get_game_level_from_url() {
-  let params = getURLParams();;
-  let level = params['level'] || 'easy';
+function get_game_level_from_url(level) {
 
   if (level === 'easy') {
     return 3;

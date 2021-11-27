@@ -7,10 +7,8 @@ class InputArea {
     ) {
         this.game = game;
 
-        this.input = createInput('');
-        this.input.position(x, y);
-        this.input.size(size, 30);
-        this.input.elt.focus();
+        this.input = document.getElementById("input-area");
+        this.input.focus();
     }
 
     // initialize input area before starting a game
@@ -28,9 +26,9 @@ class InputArea {
     check_if_user_enter_right_word() {
         let block_manager = this.game.block_manager;
 
-        let success = block_manager.break_block(this.input.value());
+        let success = block_manager.break_block(this.input.value);
         // clear input area
-        this.input.value('');
+        this.input.value = '';
         return success;
     }
 }

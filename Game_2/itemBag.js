@@ -20,17 +20,17 @@ class ItemBag {
     }
 
     reset() {
-        rectMode(CENTER);
-        fill(BLOCK_COLOR);
-        rect(this.x, this.y, this.width, this.height);
-        fill(255, 255, 255);
+        // rectMode(CENTER);
+        // fill(BLOCK_COLOR);
+        // rect(this.x, this.y, this.width, this.height);
+        // fill(255, 255, 255);
 
-        textAlign(CENTER, CENTER);
-        text(
-            "blue - delete all blocks",
-            this.x,
-            this.y,
-        );
+        // textAlign(CENTER, CENTER);
+        // text(
+        //     "blue - delete all blocks",
+        //     this.x,
+        //     this.y,
+        // );
     }
 
     add_list(score) {
@@ -70,7 +70,7 @@ class ItemBag {
         fill(255, 255, 255);
         textAlign(CENTER, CENTER);
         text(
-            "yello - speedy block",
+            "yellow - speedy block",
             this.x,
             this.y + this.height * 2,
         );
