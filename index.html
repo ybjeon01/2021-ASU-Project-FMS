@@ -28,6 +28,8 @@
       <h1 class="scoreboard-title">
         Highest Score Board
       </h1>
+      <ul id="scoreboard-list">
+      </ul>
     </div>
   </div>
 
@@ -68,6 +70,11 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
   <script>
+    
+    // get score list from web storage.
+    function get_score_list(gameName) {
+      return JSON.parse(localStorage.getItem(`${gameName}-scoreList`));
+    }
 
     function init() {
       let selector = gsap.utils.selector("#root");
@@ -78,6 +85,7 @@
       let gameTutorialVideoSrc = selector("#tutorial-video-src")[0];
       let gamePlay = selector("#game-play-button")[0];
       let gameHome = selector("#game-home-button")[0];
+      let gameScoreBoardList = selector("#scoreboard-list")[0];
 
       var tl = gsap.timeline();
       tl.to([games[0], games[1], games[3], games[2]], {scale: 1.1, stagger: 0.3})
@@ -114,6 +122,16 @@
           openHelperBoard.play()
 
           /* add game scoreboard code */
+          let list = get_score_list(`game${idx+1}`);
+          
+          list.forEach((score, idx) => {
+            let node = document.createElement("li");
+            node.innerHTML = score;
+            node.classList.add("scoreboard-list-item")
+            gameScoreBoardList.appendChild(node);
+          });
+
+          // .scoreboard-list-item
 
           /* add game tutorial video code */
           gameTutorialVideoSrc.src = "./Game_2/tutorial-sample.mp4";
