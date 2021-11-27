@@ -161,7 +161,7 @@ function add_to_score_list(gameName, score) {
 
   if (!arr.includes(score)) {
     arr.push(score);
-    arr.sort();
+    arr.sort((a, b) => b-a);
     localStorage.setItem(`${gameName}-scoreList`, JSON.stringify(arr));
   }
 }
