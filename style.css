@@ -87,6 +87,8 @@ html, body {
 
   border: 5px solid #EEEEEE;
   border-radius: 15px;
+
+  overflow: hidden;
 }
 
 .scoreboard-title {
