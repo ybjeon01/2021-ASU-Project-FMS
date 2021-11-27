@@ -79,8 +79,9 @@ class Game {
 
       this.block_manager.drop_from_the_sky();
       let hit_bottom = this.block_manager.update_and_draw();
-      if (hit_bottom) {
-        this.score_area.add_score(-100);
+      if (hit_bottom != 0) {
+        console.log(hit_bottom);
+        this.score_area.add_score(-100 * hit_bottom);
       }
       this.score_area.draw();
       
@@ -161,7 +162,7 @@ function add_to_score_list(gameName, score) {
 
   if (!arr.includes(score)) {
     arr.push(score);
-    arr.sort();
+    arr.sort((a, b) => b-a);
     localStorage.setItem(`${gameName}-scoreList`, JSON.stringify(arr));
   }
 }
