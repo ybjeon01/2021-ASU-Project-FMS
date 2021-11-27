@@ -10,6 +10,8 @@ class ScoreArea {
         this.score = 0;
         this.y = SCORE_LOC_Y;
         this.x = SCORE_LOC_X;
+
+        this.max_score = 0;
     }
 
     reset() {
@@ -27,6 +29,9 @@ class ScoreArea {
     }
 
     add_score(score) {
+        if (this.max_score < this.score) {
+            this.max_score = this.score;
+        }
         this.score += score;
     }
 

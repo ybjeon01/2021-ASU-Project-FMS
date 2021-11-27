@@ -92,6 +92,10 @@ class Game {
 
   gameover() {
     this.gameover_element.style = "display: block";
+
+    make_score_list("game2");
+    let score_list = get_score_list("game2");
+    add_to_score_list("game2", this.score_area.max_score);
   }
 
   key_handler(key_code) {
@@ -148,20 +152,24 @@ function get_game_level_from_url(level) {
 }
 
 
-function get_score_list() {
-  return JSON.parse(localStorage.getItem('scoreList'));
+function get_score_list(gameName) {
+  console.log(localStorage.getItem(`${gameName}-scoreList`));
+  return JSON.parse(localStorage.getItem(`${gameName}-scoreList`));
 }
 
-function add_to_score_list(score) {
-  let arr = get_score_list();
-  arr.push(score);
-  arr.sort();
-  localStorage.setItem('scoreList', JSON.stringify(arr));
+function add_to_score_list(gameName, score) {
+  let arr = get_score_list(gameName);
+
+  if (!arr.includes(score)) {
+    arr.push(score);
+    arr.sort();
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify(arr));
+  }
 }
 
-function make_score_list() {
-  let scoreList = localStorage.getItem('scoreList');
+function make_score_list(gameName) {
+  let scoreList = localStorage.getItem(`${gameName}-scoreList`);
   if (scoreList === null) {
-    localStorage.setItem('scoreList', JSON.stringify([]));
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify([]));
   }
 }
