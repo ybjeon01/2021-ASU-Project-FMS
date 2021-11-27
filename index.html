@@ -124,14 +124,20 @@
           /* add game scoreboard code */
           let list = get_score_list(`game${idx+1}`);
           
+          gameScoreBoardList.innerHTML = "";
+
           list.forEach((score, idx) => {
+            // add only 6 highest scores to list
+            if (idx >= 6) {
+              return;
+            }
+            console.log(idx);
+
             let node = document.createElement("li");
             node.innerHTML = score;
             node.classList.add("scoreboard-list-item")
             gameScoreBoardList.appendChild(node);
           });
-
-          // .scoreboard-list-item
 
           /* add game tutorial video code */
           gameTutorialVideoSrc.src = "./Game_2/tutorial-sample.mp4";
