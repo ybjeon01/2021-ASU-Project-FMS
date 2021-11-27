@@ -96,6 +96,23 @@ html, body {
   font-size: 2rem;
 }
 
+#scoreboard-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  list-style-type: none;
+}
+
+.scoreboard-list-item {
+  margin: 1rem;
+  color: #EEEEEE;
+  text-align: center;
+
+  font-size: 3rem;
+  font-weight: bold;
+
+}
 
 
 .transparent-curtain {
