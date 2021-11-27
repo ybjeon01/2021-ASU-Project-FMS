@@ -116,20 +116,21 @@ class BlockManager {
 
     }
 
-    // if block is dropped below the window, return true
+    // if blocks are dropped below the window, return number of the blocks 
     update_and_draw() {
-        let remove = false;
+        let num_remove = 0;
         for (let i = this.used_blocks.length - 1; i >= 0; i--) {
             let block = this.used_blocks[i];
-            remove = block.update();
+            let remove = block.update();
             if (remove) {
                 this.used_blocks.splice(i, 1);
+                num_remove += 1;
             }
             else {
                 block.draw();
             }
         }
-        return remove;
+        return num_remove;
     }
 
     // if block_list has block with the text, ask the block whether it is
