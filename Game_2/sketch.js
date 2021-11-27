@@ -35,8 +35,26 @@ class Game {
 
         this.level_list.style = "display: none"
 
+        this.pause.style = "visibility: visible";
+
       });
     });
+
+    this.is_paused = false;
+    this.pause = document.getElementById("pause-button");
+
+    this.pause.addEventListener("click", () => {
+      if (this.is_paused) {
+        this.is_paused = false;
+        this.pause.innerHTML = "pause";
+      }
+      else {
+        this.is_paused = true;
+        this.pause.innerHTML = "play";
+      }
+    });
+
+    this.gameover_element = document.getElementById("gameover");
   }
 
   reset() {
@@ -48,6 +66,9 @@ class Game {
 
   run() {
     if (this.selected_level === "") {
+    }
+    else if (this.is_paused) {
+
     }
     else if (this.score_area.score < 0) {
       this.gameover();
@@ -70,18 +91,11 @@ class Game {
   }
 
   gameover() {
-    rectMode(CENTER);
-    fill(100);
-    rect(500, 500, 300, 200);
-    
-    fill(255, 255, 255);
-    textSize(16);
-    textAlign(CENTER, CENTER);
-    text(
-        "game over. refresh the page to restart",
-        500,
-        500,
-    );
+    this.gameover_element.style = "display: block";
+
+    make_score_list("game2");
+    let score_list = get_score_list("game2");
+    add_to_score_list("game2", this.score_area.max_score);
   }
 
   key_handler(key_code) {
@@ -138,20 +152,23 @@ function get_game_level_from_url(level) {
 }
 
 
-function get_score_list() {
-  return JSON.parse(localStorage.getItem('scoreList'));
+function get_score_list(gameName) {
+  return JSON.parse(localStorage.getItem(`${gameName}-scoreList`));
 }
 
-function add_to_score_list(score) {
-  let arr = get_score_list();
-  arr.push(score);
-  arr.sort();
-  localStorage.setItem('scoreList', JSON.stringify(arr));
+function add_to_score_list(gameName, score) {
+  let arr = get_score_list(gameName);
+
+  if (!arr.includes(score)) {
+    arr.push(score);
+    arr.sort();
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify(arr));
+  }
 }
 
-function make_score_list() {
-  let scoreList = localStorage.getItem('scoreList');
+function make_score_list(gameName) {
+  let scoreList = localStorage.getItem(`${gameName}-scoreList`);
   if (scoreList === null) {
-    localStorage.setItem('scoreList', JSON.stringify([]));
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify([]));
   }
 }
