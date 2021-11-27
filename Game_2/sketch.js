@@ -153,7 +153,6 @@ function get_game_level_from_url(level) {
 
 
 function get_score_list(gameName) {
-  console.log(localStorage.getItem(`${gameName}-scoreList`));
   return JSON.parse(localStorage.getItem(`${gameName}-scoreList`));
 }
 
