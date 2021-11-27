@@ -62,6 +62,10 @@ class Game {
         this.score_area.add_score(-100);
       }
       this.score_area.draw();
+      
+      if (this.input_area.input !== document.activeElement) {
+        this.input_area.input.focus();
+      }
     }
   }
 
