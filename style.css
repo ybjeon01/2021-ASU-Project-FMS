@@ -206,6 +206,10 @@ html, body {
   transition: opacity 500ms ease-in;
 }
 
+.game4-title {
+  color: white;
+}
+
 .game:hover .game-title {
   opacity: 1.0;
 }
@@ -225,5 +229,6 @@ html, body {
 }
 
 .game4 {
-  background-color: green;
+  background-image: url("./static/imgs/game4.JPG");
+  background-size: cover;
 }
