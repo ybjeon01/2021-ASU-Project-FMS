@@ -1,34 +1,212 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" type="text/css" href="index.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Osu!</title>
 </head>
 
-<body>
-  <!-- <div id="tutorial-video">
-    <video controls>
-      <source src="tutorial-sample.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div> -->
+<body id="root">
+  <div class="game-helper">
+    <div class="tutorial">
+      <video id="tutorial-video" class="tutorial-video" autoPlay muted>
+        <source src="" id="tutorial-video-src" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
-  <div id='start'>
-    <a href="Tutorial/">Tutorial</a>
-  </div>
-  <div id='start'>
-    <a href="Map1/">Map 1</a>
-  </div>
-  <div id='start'>
-    <a href="Map2/">Map 2</a>
-  </div>
-  <div id='start'>
-    <a href="Map3/">Map 3</a>
+      <div class="controllers">
+        <button id="game-play-button" class="button">
+          Play Game
+        </button>
+
+        <button id="game-home-button" class="button">
+          Home
+        </button>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <h1 class="scoreboard-title">
+        Map Information
+      </h1>
+      <ul id="scoreboard-list">
+        <li class="scoreboard-item">
+          <span class="scoreboard-list-item scoreboard-title-2">
+            Map Name:
+          </span>
+          <span class="scoreboard-list-item">
+            <span id="scoreboard-map-name">
+              Map Name
+            </span>
+          </span>
+        </li>
+        <li class="scoreboard-item">
+          <span class="scoreboard-list-item scoreboard-title-2">
+            Author:
+          </span>
+          <span class="scoreboard-list-item">
+            <span id="scoreboard-map-author">
+              Author
+            </span>
+          </span>
+        </li>
+        <li class="scoreboard-item">
+          <span class="scoreboard-list-item scoreboard-title-2">
+            BPM:
+          </span>
+          <span class="scoreboard-list-item">
+            <span id="scoreboard-map-bpm">
+              BPM
+            </span>
+          </span>
+        </li>
+        <li class="scoreboard-item">
+          <span class="scoreboard-list-item scoreboard-title-2">
+            Difficulty:
+          </span>
+          <span class="scoreboard-list-item">
+            <span id="scoreboard-map-diff">
+              Stars
+            </span>
+          </span>
+      </ul>
+    </div>
   </div>
 
-  <div id="home">
-    <a href="../">Home</a>
+  <div class="transparent-curtain">
   </div>
+  <div class="indicator">
+    hover your mouse on one of the pictures
+  </div>
+  <div class="game-container">
+    <button href="./Tutorial" id="game1" class="game game1">
+      <div class="game-title">
+        Tutorial
+      </div>
+    </button>
+
+
+    <button href="./Map1" id="game2" class="game game2">
+      <div class="game-title game4-title">
+        Map 1
+      </div>
+    </button>
+
+
+    <button href="./Map2" id="game3" class="game game3">
+      <div class="game-title game4-title">
+        Map 2
+      </div>
+    </button>
+
+
+    <button href="./Map3" id="game4" class="game game4">
+      <div class="game-title game4-title">
+        Map 3
+      </div>
+    </button>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+  <script>
+    // get score list from web storage.
+    function get_score_list(gameName) {
+      fetch(`./Map${gameName}/mapdata.json`)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          let selector = gsap.utils.selector("#root");
+
+          selector("#scoreboard-map-name")[0].innerHTML = data.name;
+          selector("#scoreboard-map-author")[0].innerHTML = data.artist;
+          selector("#scoreboard-map-bpm")[0].innerHTML = data.bpm;
+          selector("#scoreboard-map-diff")[0].innerHTML = `${data.difficulty} ⭐️- ${data.difficultyString}`;
+        });
+    }
+
+    function init() {
+      let selector = gsap.utils.selector("#root");
+      let games = selector(".game");
+
+      let gameHelper = selector(".game-helper")[0];
+      let gameTutorialVideo = selector("#tutorial-video")[0];
+      let gameTutorialVideoSrc = selector("#tutorial-video-src")[0];
+      let gamePlay = selector("#game-play-button")[0];
+      let gameHome = selector("#game-home-button")[0];
+      let gameScoreBoardList = selector("#scoreboard-list")[0];
+
+      var tl = gsap.timeline();
+      tl.to([games[0], games[1], games[3], games[2]], {
+        scale: 1.1,
+        stagger: 0.3
+      })
+      tl.to([games[0], games[1], games[3], games[2]], {
+        scale: 1.0,
+        stagger: 0.3
+      }, "<0.6")
+      tl.to(".indicator", {
+        opacity: 1.0
+      }, ">1")
+      tl.to(".transparent-curtain", {
+        display: "none"
+      });
+
+      const openHelperBoard = gsap.to(
+        gameHelper, {
+          y: 0,
+          duration: 0.3,
+          paused: true
+        }
+      );
+      // When user clicks home button, close heloper board
+      gameHome.addEventListener("click", () => openHelperBoard.reverse());
+
+      games.forEach((game, idx) => {
+        const hover = gsap.to(
+          game, {
+            scale: 1.05,
+            duration: .1,
+            paused: true
+          }
+        );
+
+        game.addEventListener("mouseenter", () => hover.play());
+        game.addEventListener("mouseleave", () => hover.reverse());
+
+        /* open helper board */
+        game.addEventListener("click", () => {
+          openHelperBoard.play()
+
+          /* add game scoreboard code */
+          let list = get_score_list(`${idx}`);
+
+          /* add game tutorial video code */
+          // gameTutorialVideoSrc.src = `./static/videos/game${idx+1}-tutorial.mp4`;
+          gameTutorialVideo.load();
+          gameTutorialVideo.play();
+
+          /* When user clicks a game play button in helper board */
+          gamePlay.addEventListener("click", () => {
+            gsap.to(
+              ".transparent-curtain", {
+                display: "block",
+                backgroundColor: '#FFFFFF',
+                opacity: 1,
+                zIndex: 1000,
+                onComplete: () => window.location.href = `./Map${idx}`
+              }
+            );
+          });
+        });
+      });
+    }
+
+    window.addEventListener("load", (e) => {
+      init()
+    });
+  </script>
 </body>
 
 </html>
