@@ -1,44 +1,50 @@
-SCORE_HEIGHT = 100
-SCORE_WIDTH = 300
+SCORE_HEIGHT = 35
+SCORE_WIDTH = 200
 
-SCORE_LOC_X = 800
-SCORE_LOC_Y = 800
+SCORE_LOC_X = 50
+SCORE_LOC_Y = 80
 
 class ScoreArea {
-    constructor() {
+    constructor(game) {
+        this.game = game
         this.score = 0;
-        this.y = SCORE_HEIGHT;
-        this.x = SCORE_WIDTH;
+        this.y = SCORE_LOC_Y;
+        this.x = SCORE_LOC_X;
+
+        this.max_score = 0;
     }
 
     reset() {
-        rectMode(CENTER);
-        fill(BLOCK_COLOR);
-        rect(this.x, this.y, SCORE_WIDTH, SCORE_HEIGHT);
-        fill(255, 255, 255);
+        // rectMode(CENTER);
+        // fill(BLOCK_COLOR);
+        // rect(this.x, this.y, SCORE_WIDTH, SCORE_HEIGHT);
+        // fill(255, 255, 255);
 
-        textAlign(CENTER, CENTER);
-        text(
-            this.score,
-            this.x,
-            this.y,
-        );
+        // textAlign(CENTER, CENTER);
+        // text(
+        //     "score: " + this.score,
+        //     this.x,
+        //     this.y,
+        // );
     }
 
     add_score(score) {
+        if (this.max_score < this.score) {
+            this.max_score = this.score;
+        }
         this.score += score;
     }
 
     draw() {
         rectMode(CENTER);
         fill(BLOCK_COLOR);
-        rect(this.x, this.y, BLOCK_WIDTH, BLOCK_HEIGHT);
+        rect(this.x, this.y, SCORE_WIDTH, SCORE_HEIGHT);
         
         fill(255, 255, 255);
 
         textAlign(CENTER, CENTER);
         text(
-            this.score,
+            "score: " + this.score,
             this.x,
             this.y,
         );

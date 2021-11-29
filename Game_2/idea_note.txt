@@ -1,0 +1,40 @@
+1. item in block
+  - items
+    - hit number 1 (remove all blocks in the window)
+    - hit number 2 (slow blocks)
+    - hit number 3 (add life)
+2. speedy block
+3. hard block (enter more than 1 word to remove the block)
+4. evil block (user cannot ignore the block)
+  - screen with fog
+  - make a normal block to hard block
+
+5. life 
+
+
+6. set game level by getting data from URL params 
+
+
+
+# todo
+
+0. change type of input_area to a normal block
+  - allow typing
+  - flush when enter is pressed
+  - backspace -> delete character
+
+
+1. add item to item bag
+
+2. when user hit number, 1, 2, or 3, use item
+
+3.main menu images
+
+4. high score board
+
+5. tutorial video
+
+6. game sound and particle effects
+
+  - opengameart.org
+  - itch.io

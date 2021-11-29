@@ -1,22 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="game_style.css">
+    <meta charset="utf-8" />
+
+    <script src="sketch.js" defer></script>
+    <script src="block.js" defer></script>
+    <script src="inputArea.js" defer></script>
+    <script src="scoreArea.js" defer></script>
+    <script src="board.js" defer></script>
+    <script src="itemBag.js" defer></script>
+    </script>
   </head>
   <body>
-    <div id="tutorial-video">
-      <video controls>
-        <source src="tutorial-sample.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-      </video>
-    </div>
-    <div id='start'>
-      <a href="./game_level.html">start game</a>
-    </div>
 
-    <div id="home">
-      <a href="../index.html">Home</a>
+
+    <ul id="level-list" class="level-list">
+      <li class="button">
+        <input type="radio" name="level" value="easy" id="easy-radio"></input>
+        <label for='easy-radio'>EASY</label>
+      </li>
+      <li class="button">
+        <input type="radio" name="level" value="medium" id="medium-radio"></input>
+        <label for='medium-radio'>MEDIUM</label>
+      </li>
+      <li class="button">
+        <input type="radio" name="level" value="hard" id="hard-radio"></input>
+        <label for='hard-radio'>HARD</label>
+      </li>
+    </ul>
+
+    <input type="text" id="input-area" />
+
+    <button id="pause-button">Pause</button>
+
+    <div id="gameover">
+      Game Over
+      <div class="controller">
+        <a href="../" id="main-menu" class="gameover-button">Go to Main Menu</a>
+        <a href="./" id="restart" class="gameover-button">Restart Game</a>
+      </div>
     </div>
-  
+    <main>
+    </main>
   </body>
 </html>
