@@ -1,31 +1,180 @@
 <!doctype html>
 
 <html lang="en">
+
 <head>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
   <link rel="stylesheet" type="text/css" href="style.css">
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>Project FMS</title>
-  <meta name="description" content="description.">
-  <meta name="author" content="Aidan Labourdette - Layendan">
-
-  <meta property="og:title" content="2021 ASU PROJECT FMS">
-  <meta property="og:type" content="website">
-  <meta property="og:description" content="description.">
-  <meta property="og:image" content="image.png">
-
-  <link rel="icon" href="/favicon.ico">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
 </head>
 
-<body id="myCanvas">
-  <script src="sketch.js"></script>
+<body id="root">
+  <div class="game-helper">
+    <div class="tutorial">
+      <video id="tutorial-video" class="tutorial-video" autoPlay muted>
+        <source src="" id="tutorial-video-src" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      <div class="controllers">
+        <button id="game-play-button" class="button">
+          Play Game
+        </button>
+
+        <button id="game-home-button" class="button">
+          Home
+        </button>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <h1 class="scoreboard-title">
+        Highest Score Board
+      </h1>
+      <ul id="scoreboard-list">
+      </ul>
+    </div>
+  </div>
+
+  <div class="transparent-curtain">
+  </div>
+  <div class="indicator">
+    hover your mouse on one of the pictures
+  </div>
+  <div class="game-container">
+    <button href="./Game_1" id="game1" class="game game1">
+      <div class="game-title game4-title">
+        Game1
+      </div>
+    </button>
+
+
+    <button href="./Game_2" id="game2" class="game game2">
+      <div class="game-title">
+        Game2
+      </div>
+    </button>
+
+
+    <button href="./Game_3" id="game3" class="game game3">
+      <div class="game-title">
+        Game3
+      </div>
+    </button>
+
+
+    <button href="./Game_4" id="game4" class="game game4">
+      <div class="game-title game4-title">
+        Game4
+      </div>
+    </button>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+  <script>
+    // get score list from web storage.
+    function get_score_list(gameName) {
+      return JSON.parse(localStorage.getItem(`${gameName}-scoreList`));
+    }
+
+    function init() {
+      let selector = gsap.utils.selector("#root");
+      let games = selector(".game");
+
+      let gameHelper = selector(".game-helper")[0];
+      let gameTutorialVideo = selector("#tutorial-video")[0];
+      let gameTutorialVideoSrc = selector("#tutorial-video-src")[0];
+      let gamePlay = selector("#game-play-button")[0];
+      let gameHome = selector("#game-home-button")[0];
+      let gameScoreBoardList = selector("#scoreboard-list")[0];
+
+      var tl = gsap.timeline();
+      tl.to([games[0], games[1], games[3], games[2]], {
+        scale: 1.1,
+        stagger: 0.3
+      })
+      tl.to([games[0], games[1], games[3], games[2]], {
+        scale: 1.0,
+        stagger: 0.3
+      }, "<0.6")
+      tl.to(".indicator", {
+        opacity: 1.0
+      }, ">1")
+      tl.to(".transparent-curtain", {
+        display: "none"
+      });
+
+      const openHelperBoard = gsap.to(
+        gameHelper, {
+          y: 0,
+          duration: 0.3,
+          paused: true
+        }
+      );
+      // When user clicks home button, close heloper board
+      gameHome.addEventListener("click", () => openHelperBoard.reverse());
+
+      games.forEach((game, idx) => {
+        const hover = gsap.to(
+          game, {
+            scale: 1.05,
+            duration: .1,
+            paused: true
+          }
+        );
+
+        game.addEventListener("mouseenter", () => hover.play());
+        game.addEventListener("mouseleave", () => hover.reverse());
+
+        /* open helper board */
+        game.addEventListener("click", () => {
+          openHelperBoard.play()
+
+          /* add game scoreboard code */
+          let list = get_score_list(`game${idx+1}`);
+
+
+          gameScoreBoardList.innerHTML = "";
+
+          if (list !== null) {
+            list.forEach((score, idx) => {
+              // add only 6 highest scores to list
+              if (idx >= 6) {
+                return;
+              }
+              console.log(idx);
+
+              let node = document.createElement("li");
+              node.innerHTML = score;
+              node.classList.add("scoreboard-list-item")
+              gameScoreBoardList.appendChild(node);
+            });
+          }
+
+          /* add game tutorial video code */
+          gameTutorialVideoSrc.src = `./static/videos/game${idx+1}-tutorial.mp4`;
+          gameTutorialVideo.load();
+          gameTutorialVideo.play();
+
+          /* When user clicks a game play button in helper board */
+          gamePlay.addEventListener("click", () => {
+            gsap.to(
+              ".transparent-curtain", {
+                display: "block",
+                backgroundColor: '#FFFFFF',
+                opacity: 1,
+                zIndex: 1000,
+                onComplete: () => window.location.href = `./Game_${idx+1}`
+              }
+            );
+          });
+        });
+      });
+    }
+
+    window.addEventListener("load", (e) => {
+      init()
+    });
+  </script>
 </body>
+
 </html>
