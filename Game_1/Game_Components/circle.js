@@ -19,7 +19,7 @@ function Circle(circleSize, accuracy, approachRate, x, y, color, number, time, p
         };
 
         if (!this.isActive) {
-            this.approachSizeRate = (this.approachSize - this.radius) / (timeDiff * 48);
+            this.approachSizeRate = (this.approachSize - (this.radius - 20)) / (timeDiff * 48);
             this.isActive = true;
         }
 
@@ -33,14 +33,9 @@ function Circle(circleSize, accuracy, approachRate, x, y, color, number, time, p
     this.click = function (mouseX, mouseY, songTime) {
         let distance = Math.sqrt((mouseX - x) * (mouseX - x) + (mouseY - y) * (mouseY - y));
         // let distance = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
-        if (distance <= this.radius) {
-            if (Math.abs(this.time - songTime) <= 1) { // success
-                return 1;
-            } else { // fail
-                console.log("Fail 1");
-                return -1;
-            }
-        } else if (distance <= this.approachSize / 2) { // fail
+        if (distance <= this.radius && Math.abs(this.time - songTime) <= 1) {
+            return 1;
+        } else if (distance <= this.approachSize / 2 && songTime > this.time - 1.5) { // fail
             console.log("Fail 2");
             return -1;
         } else { // continue

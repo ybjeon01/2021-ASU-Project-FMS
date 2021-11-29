@@ -1,0 +1,10 @@
+{
+    "name": "Tutorial",
+    "artist": "Peter Lambert",
+    "circleSize": 3,
+    "accuracy": 3,
+    "approachRate": 4,
+    "difficulty": "0.80",
+    "difficultyString": "Easiest",
+    "length": "03:48"
+}

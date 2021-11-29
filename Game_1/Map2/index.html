@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <meta charset="utf-8" />
 
-  </head>
-  <body id="myCanvas">
-    <script src="sketch.js"></script>
-  </body>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="../Game_Components/circle.js"></script>
+  <script type="text/javascript" src="../Game_Components/slider.js"></script>
+  <script type="text/javascript" src="../Game_Components/spinner.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Concert+One&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+</head>
+
+<body id="myCanvas" onresize="onResize()">
+  <script type="text/javascript" src="sketch.js"></script>
+  <div id="result_screen" class="result">
+    <p>
+      Result: <span id="result_score"></span>
+    </p>
+    <p>
+      Accuracy: <span id="result_accuracy"></span>
+    </p>
+    <p>
+      Combo: <span id="result_combo"></span>
+    </p>
+    <p>
+      <button class="button goback">
+        <a href="../" class="link">
+          Go Back
+        </a>
+      </button>
+    </p>
+  </div>
+
+</body>
+
 </html>

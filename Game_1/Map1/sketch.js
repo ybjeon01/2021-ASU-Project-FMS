@@ -1,4 +1,4 @@
-let mapdata, mapping, canvas, backgroundImage, isPlaying, song, isRightClick, isLeftClick;
+let mapdata, mapping, canvas, backgroundImage, isPlaying, song, isRightClick, isLeftClick, isKeyHeld;
 let circles; // array of circles
 let active; // array of active circles
 const canvasDiv = document.getElementById('myCanvas');
@@ -143,6 +143,8 @@ function setup() {
   circlesNum = 0;
   clickedCircles = 0;
   displayedMapAcc = 100;
+
+  isKeyHeld = false;
 
   song.onended(onSongEnd);
 
@@ -323,8 +325,8 @@ function mouseReleased(event) {
 function keyPressed() {
   switch (keyCode) {
     case 90: // z
-      for (let i = 0; i < active.length; i++) {
-        let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+      if (!isKeyHeld) {
+        let clickData = active[0].click(mouseX, mouseY, song.currentTime());
         if (clickData === -1) { // fail
           active.splice(i, 1);
           missSound.play();
@@ -341,16 +343,19 @@ function keyPressed() {
           break;
         }
       }
+
       particleArray.push(createParticle());
       break;
 
     case 88: // x
-      for (let i = 0; i < active.length; i++) {
-        let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+
+      if (!isKeyHeld) {
+        let clickData = active[0].click(mouseX, mouseY, song.currentTime());
         if (clickData === -1) { // fail
           active.splice(i, 1);
           missSound.play();
           combo = 0;
+          circlesNum++;
           break;
         } else if (clickData === 1) { // success
           active.splice(i, 1);
@@ -358,9 +363,11 @@ function keyPressed() {
           gameScore += 300 * (combo + 1);
           combo++;
           clickedCircles++;
+          circlesNum++;
           break;
         }
       }
+
       particleArray.push(createParticle());
       break;
 
@@ -414,4 +421,8 @@ function keyPressed() {
       console.log('Key Pressed: ' + keyCode);
       break;
   }
+}
+
+function keyReleased() {
+  isKeyHeld = false;
 }

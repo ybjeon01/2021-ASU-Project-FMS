@@ -5,6 +5,7 @@
     "accuracy": "3",
     "approachRate": "4",
     "difficulty": "1.84",
-    "difficultyString": "Easy",
-    "length": "00.00"
+    "difficultyString": "Medium",
+    "bpm": "120",
+    "length": "04:10"
 }
