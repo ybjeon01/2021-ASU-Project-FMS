@@ -158,7 +158,7 @@ function draw() {
 
   // Circles
   for (let i = 0; i < circles.length; i++) {
-    if (currentTime > (circles[i].time - 3)) {
+    if (currentTime > (circles[i].time - 1)) {
       active.push(circles[i]);
       circles.splice(i, 1);
     }
