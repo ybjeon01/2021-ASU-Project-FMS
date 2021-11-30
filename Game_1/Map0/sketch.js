@@ -78,16 +78,16 @@ function createParticle() {
 function addCircle(x, y, diameter, diameter2, color, number) {
   imageMode(CENTER);
   tint(color.r, color.g, color.b);
-  image(approachCircleImg, x, y, diameter2 * 2, diameter2 * 2);
-  image(circleImg, x, y, diameter * 2, diameter * 2);
+  image(approachCircleImg, x * parentWidth / 1920, y * parentHeight / 1080, diameter2 * 2, diameter2 * 2);
+  image(circleImg, x * parentWidth / 1920, y * parentHeight / 1080, diameter * 2, diameter * 2);
   tint(255, 255, 255);
-  image(circleOverlayImg, x, y, diameter * 2, diameter * 2);
+  image(circleOverlayImg, x * parentWidth / 1920, y * parentHeight / 1080, diameter * 2, diameter * 2);
   textAlign(CENTER, CENTER);
   strokeWeight(3);
   stroke(0);
   fill(255);
   textSize(diameter);
-  text(number, x, y);
+  text(number, x * parentWidth / 1920, y * parentHeight / 1080);
 }
 
 function difference(x1, y1, x2, y2) {
@@ -99,10 +99,10 @@ function difference(x1, y1, x2, y2) {
 function preload() {
 
   song = loadSound('tutorial.ogg');
-  backgroundImage = createVideo('tutorial-sample.mp4');
+  backgroundImage = createVideo('background.webm');
 
   // remove video from the top of the screen, happens when you call createVideo()
-  document.getElementsByTagName("VIDEO")[0].style.display = "none";
+  backgroundImage.hide();
 
   cursorImg = loadImage('../Game_Components/assets/cursor.png');
   cursorMiddleImg = loadImage('../Game_Components/assets/cursormiddle.png');
@@ -147,22 +147,24 @@ function setup() {
   clickedCircles = 0;
   displayedMapAcc = 100;
 
-  song.onended(onSongEnd);
+  backgroundImage.onended(onSongEnd);
+
+  backgroundImage.volume(1);
 
   noCursor();
   backgroundImage.play();
-  song.play();
+  //song.play();
 }
 
 function draw() {
   imageMode(CORNER);
   image(backgroundImage, 0, 0, parentWidth, parentHeight);
 
-  let currentTime = song.currentTime();
+  let currentTime = backgroundImage.time();
 
   // Circles
   for (let i = 0; i < circles.length; i++) {
-    if (currentTime > (circles[i].time - 3)) {
+    if (currentTime > (circles[i].time - 2)) {
       active.push(circles[i]);
       circles.splice(i, 1);
     }
@@ -274,23 +276,20 @@ function onResize() {
 }
 
 function onSongEnd() {
-  if (!song.isPaused()) { // playing or ended
-    frameRate(0);
-    song.stop();
-    song.disconnect();
-    isPlaying = false;
+  frameRate(0);
+  backgroundImage.stop();
+  isPlaying = false;
 
-    document.getElementById("defaultCanvas0").style.display = "none";
-    document.getElementById("result_screen").style.display = "grid";
-    document.getElementById("result_score").innerHTML = gameScore.toLocaleString(undefined) + " points";
-    document.getElementById("result_accuracy").innerHTML = mapAcc + "%";
-    document.getElementById("result_combo").innerHTML = combo + "X";
-  }
+  document.getElementById("defaultCanvas0").style.display = "none";
+  document.getElementById("result_screen").style.display = "grid";
+  document.getElementById("result_score").innerHTML = gameScore.toLocaleString(undefined) + " points";
+  document.getElementById("result_accuracy").innerHTML = mapAcc + "%";
+  document.getElementById("result_combo").innerHTML = combo + "X";
 }
 
 function mousePressed(event) {
   for (let i = 0; i < active.length; i++) {
-    let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+    let clickData = active[i].click(mouseX, mouseY, backgroundImage.time());
     if (clickData === -1) { // fail
       active.splice(i, 1);
       missSound.play();
@@ -328,7 +327,7 @@ function keyPressed() {
   switch (keyCode) {
     case 90: // z
       for (let i = 0; i < active.length; i++) {
-        let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+        let clickData = active[i].click(mouseX, mouseY, backgroundImage.time());
         if (clickData === -1) { // fail
           active.splice(i, 1);
           missSound.play();
@@ -350,7 +349,7 @@ function keyPressed() {
 
     case 88: // x
       for (let i = 0; i < active.length; i++) {
-        let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+        let clickData = active[i].click(mouseX, mouseY, backgroundImage.time());
         if (clickData === -1) { // fail
           active.splice(i, 1);
           missSound.play();
@@ -370,14 +369,12 @@ function keyPressed() {
 
     case 27: // escape
       if (isPlaying) { // pauses
-        song.pause();
         backgroundImage.pause();
         frameRate(0);
         cursor(ARROW);
         isPlaying = false;
       } else { // resumes
         frameRate(60);
-        song.play();
         backgroundImage.play();
         noCursor();
         isPlaying = true;
@@ -390,14 +387,12 @@ function keyPressed() {
 
     case 80: // p
       if (isPlaying) { // pauses
-        song.pause();
         backgroundImage.pause();
         frameRate(0);
         cursor(ARROW);
         isPlaying = false;
       } else { // resumes
         frameRate(60);
-        song.play();
         backgroundImage.play();
         noCursor();
         isPlaying = true;
@@ -406,16 +401,16 @@ function keyPressed() {
 
     case 77: // m
       if (isMuted) { // unmutes
-        song.setVolume(1);
+        backgroundImage.volume(1);
         isMuted = false;
       } else { // mutes
-        song.setVolume(0);
+        backgroundImage.volume(0);
         isMuted = true;
       }
       break;
 
     case 81: // q
-      song.stop(); // exit map
+      backgroundImage.stop(); // exit map
       break;
 
     default:

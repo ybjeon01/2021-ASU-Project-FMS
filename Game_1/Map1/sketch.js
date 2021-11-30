@@ -326,21 +326,23 @@ function keyPressed() {
   switch (keyCode) {
     case 90: // z
       if (!isKeyHeld) {
-        let clickData = active[0].click(mouseX, mouseY, song.currentTime());
-        if (clickData === -1) { // fail
-          active.splice(i, 1);
-          missSound.play();
-          combo = 0;
-          circlesNum++;
-          break;
-        } else if (clickData === 1) { // success
-          active.splice(i, 1);
-          successSound.play();
-          gameScore += 300 * (combo + 1);
-          combo++;
-          clickedCircles++;
-          circlesNum++;
-          break;
+        for (let i = 0; i < active.length; i++) {
+          let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+          if (clickData === -1) { // fail
+            active.splice(i, 1);
+            missSound.play();
+            combo = 0;
+            circlesNum++;
+            break;
+          } else if (clickData === 1) { // success
+            active.splice(i, 1);
+            successSound.play();
+            gameScore += 300 * (combo + 1);
+            combo++;
+            clickedCircles++;
+            circlesNum++;
+            break;
+          }
         }
       }
 
@@ -350,21 +352,23 @@ function keyPressed() {
     case 88: // x
 
       if (!isKeyHeld) {
-        let clickData = active[0].click(mouseX, mouseY, song.currentTime());
-        if (clickData === -1) { // fail
-          active.splice(i, 1);
-          missSound.play();
-          combo = 0;
-          circlesNum++;
-          break;
-        } else if (clickData === 1) { // success
-          active.splice(i, 1);
-          successSound.play();
-          gameScore += 300 * (combo + 1);
-          combo++;
-          clickedCircles++;
-          circlesNum++;
-          break;
+        for (let i = 0; i < active.length; i++) {
+          let clickData = active[i].click(mouseX, mouseY, song.currentTime());
+          if (clickData === -1) { // fail
+            active.splice(i, 1);
+            missSound.play();
+            combo = 0;
+            circlesNum++;
+            break;
+          } else if (clickData === 1) { // success
+            active.splice(i, 1);
+            successSound.play();
+            gameScore += 300 * (combo + 1);
+            combo++;
+            clickedCircles++;
+            circlesNum++;
+            break;
+          }
         }
       }
 
