@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -6,8 +7,6 @@ html, body {
   width: 100%;
   height: 100%;
 }
-
-
 
 .game-helper {
   position: absolute;
@@ -28,7 +27,6 @@ html, body {
 
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
-  
 
   background-color: rgba(0, 0, 0, 0.8);
 }
@@ -57,7 +55,7 @@ html, body {
   margin: 3rem 2rem;
   padding: 1rem;
 
-  border: 5px solid #EEEEEE;
+  border: 5px solid #eeeeee;
   border-radius: 15px;
 
   background-color: rgba(0, 0, 0, 0);
@@ -65,12 +63,11 @@ html, body {
   text-decoration: none;
   font-size: 3rem;
   font-weight: bold;
-  color: #EEEEEE;
+  color: #eeeeee;
   text-align: center;
 
   transition: all 500ms ease-out;
 }
-
 
 .button:hover {
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8), -3px -3px 10px rgba(0, 0, 0, 0.8);
@@ -79,20 +76,20 @@ html, body {
 }
 
 .button:visited {
-  color: #EEEEEE;
+  color: #eeeeee;
 }
 
 .scoreboard {
   margin: 1rem;
 
-  border: 5px solid #EEEEEE;
+  border: 5px solid #eeeeee;
   border-radius: 15px;
 
   overflow: hidden;
 }
 
 .scoreboard-title {
-  color: #EEEEEE;
+  color: #eeeeee;
   text-align: center;
 
   font-size: 2rem;
@@ -108,19 +105,17 @@ html, body {
 
 .scoreboard-list-item {
   margin: 1rem;
-  color: #EEEEEE;
+  color: #eeeeee;
   text-align: center;
 
   font-size: 3rem;
   font-weight: bold;
-
 }
-
 
 .transparent-curtain {
   position: absolute;
   z-index: 1;
-  
+
   width: 100%;
   height: 100%;
 }
@@ -138,7 +133,7 @@ html, body {
   opacity: 0;
 
   background-color: rgba(0, 0, 0, 1);
-  border: 5px #EEEEEE solid;
+  border: 5px #eeeeee solid;
   border-radius: 15px;
 
   padding: 0.5rem;
@@ -148,12 +143,10 @@ html, body {
   align-items: center;
 
   text-align: center;
-  color: #EEEEEE;
+  color: #eeeeee;
   font-size: 3rem;
   font-weight: bold;
 }
-
-
 
 .game-container {
   display: grid;
@@ -175,18 +168,16 @@ html, body {
   position: relative;
   display: block;
 
-  border: 5px #EEEEEE solid;
+  border: 5px #eeeeee solid;
   border-radius: 15px;
 
   text-decoration: none;
 
-
   transition: all 500ms ease-out;
-
 }
 
 .game:hover {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .game-title {
@@ -211,11 +202,12 @@ html, body {
 }
 
 .game:hover .game-title {
-  opacity: 1.0;
+  opacity: 1;
 }
 
 .game1 {
-  background-color: red;
+  background-image: url("./static/imgs/game1.png");
+  background-size: cover;
 }
 
 .game2 {

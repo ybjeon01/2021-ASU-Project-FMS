@@ -1,7 +1,72 @@
+class Game {
+
+  constructor() {
+    this.board = new Board(windowWidth, windowHeight)
+
+    this.score_area = new ScoreArea();
+    this.block_manager = new BlockManager(this.score_area);
+    this.input_area = new InputArea(this.block_manager);
+  }
+
+  reset() {
+    this.block_manager.reset();
+    this.input_area.reset();
+    this.score_area.reset();
+  }
+
+  run() {
+    if (this.score_area.score < 0) {
+      rectMode(CENTER);
+      fill(100);
+      rect(500, 500, 300, 200);
+      
+      fill(255, 255, 255);
+      textSize(16);
+      textAlign(CENTER, CENTER);
+      text(
+          "game over. refresh the page to restart",
+          500,
+          500,
+      );
+    }
+    else {
+      this.board.draw();
+      
+      this.block_manager.drop_from_the_sky();
+      let hit_bottom = this.block_manager.update_and_draw();
+      if (hit_bottom) {
+        this.score_area.add_score(-100);
+      }
+      this.score_area.draw();
+    }
+  }
+
+  key_handler(key_code) {
+    if (key_code == ENTER) {
+      let success = this.input_area.check_if_user_enter_right_word();
+      if (success) {
+        this.score_area.add_score(100);
+      }
+    }
+  }
+}
+
+let game = undefined;
+
+// The statements in the setup() function
+// execute once when the program begins
 function setup() {
-  createCanvas(1920,1080);
+  createCanvas(windowWidth, windowHeight);
+  frameRate(60);
+
+  game = new Game();
+  game.reset();
 }
 
 function draw() {
-  background(255);
+  game.run();
+}
+
+function keyPressed() {
+  game.key_handler(keyCode);
 }

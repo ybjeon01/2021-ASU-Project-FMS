@@ -1,0 +1,20 @@
+{
+    "maps":
+    {
+        "map1":
+        {
+            "path": "Map1",
+            "dataPath": "Map1/mapdata.json"
+        },
+        "map2":
+        {
+            "path": "Map2",
+            "dataPath": "Map2/mapdata.json"
+        },
+        "map3":
+        {
+            "path": "Map3",
+            "dataPath": "Map3/mapdata.json"
+        }
+    }
+}
