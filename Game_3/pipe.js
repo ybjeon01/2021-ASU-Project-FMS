@@ -27,7 +27,7 @@ function Pipe() {
     }
   
     this.show = function() {
-      fill(72, 167, 1978);
+      fill(2, 7, 93);
       if (this.highlight) {
         fill(255, 0, 0);
       }

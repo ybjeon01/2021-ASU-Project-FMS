@@ -14,6 +14,8 @@ let numFrames = 19   ;
 let x, y;
 let whichFrame = 0;
 
+let bg;
+let bgX = parentWidth/2;
 function preload() {
   for (let i = 0; i < numFrames; i++)
   {
@@ -21,10 +23,11 @@ function preload() {
     let frame = loadImage(filename);
     frames.push(frame);
   }
+  bg = loadImage('background/mountainBackground.png');
+
 }
 
 function setup() {
-  
   createCanvas(parentWidth, parentHeight); 
   bird = new Bird();
   pipes.push(new Pipe());
@@ -34,8 +37,15 @@ function setup() {
 
 function draw() {
   background(61, 72, 73);
+  image(bg, bgX, parentHeight/2, parentWidth, parentHeight);
+  image(bg, bgX + parentWidth, parentHeight/2, parentWidth, parentHeight);
+  image(bg, bgX + parentWidth * 2, parentHeight/2, parentWidth, parentHeight);
 
- 
+  bgX = bgX - 0.5;
+  if (bgX < -parentWidth)
+  {
+    bgX = 0;
+  }
 
   if(whichFrame === frames.length)
   {
@@ -54,14 +64,21 @@ function draw() {
       rect(0, 0, parentWidth, parentHeight);
       gameOverScreenEnabled = true;
 
+      let col = color(115,215,255);
+
       restartButton = createButton('Restart');
       restartButton.position(parentWidth / 2 - 200, parentHeight / 3);
       restartButton.size(400,100);
+      restartButton.style('font-size', '50px');
+      restartButton.style('background-color', col);
       restartButton.mousePressed(restartGame)
+      
 
       mainMenuButton = createButton('Main Menu');
       mainMenuButton.position(parentWidth / 2 - 200, parentHeight / 2);
       mainMenuButton.size(400,100);
+      mainMenuButton.style('font-size', '50px');
+      mainMenuButton.style('background-color', col);
       mainMenuButton.mousePressed(returnToMainMenu)
     }
   }
