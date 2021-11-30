@@ -218,8 +218,9 @@ body {
 }
 
 .game1 {
-  background-image: url("./Map0/tutorial-sample.mp4");
+  background-image: url("./Map0/cover.png");
   background-size: cover;
+  background-position: center;
 }
 
 .game2 {
@@ -236,4 +237,5 @@ body {
 .game4 {
   background-image: url("./Map3/background.png");
   background-size: cover;
+  background-position: center;
 }

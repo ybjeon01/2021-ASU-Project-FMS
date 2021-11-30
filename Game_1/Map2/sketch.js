@@ -78,7 +78,7 @@ function createParticle() {
 function addCircle(x, y, diameter, diameter2, color, number) {
   imageMode(CENTER);
   tint(color.r, color.g, color.b);
-  image(approachCircleImg, x, y, diameter2 * 2, diameter2 * 2);
+  image(approachCircleImg, x, y, diameter2, diameter2);
   image(circleImg, x, y, diameter * 2, diameter * 2);
   tint(255, 255, 255);
   image(circleOverlayImg, x, y, diameter * 2, diameter * 2);
@@ -158,7 +158,7 @@ function draw() {
 
   // Circles
   for (let i = 0; i < circles.length; i++) {
-    if (currentTime > (circles[i].time - 3)) {
+    if (currentTime > (circles[i].time - 2)) {
       active.push(circles[i]);
       circles.splice(i, 1);
     }
