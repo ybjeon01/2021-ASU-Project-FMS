@@ -44,6 +44,10 @@ function draw() {
 
   if(gameOver)
   {
+    make_score_list("game3");
+    let score_list = get_score_list("game3");
+    add_to_score_list("game3", this.score);
+
     if(!gameOverScreenEnabled)
     {
       fill(0,0,0,150);
@@ -84,6 +88,10 @@ function draw() {
         this.score = this.score + 1;
         scoreSound.play();
       }
+      if (bird.y >= this.parentHeight)
+      {
+        gameOver = true;
+      }
     }
 
     bird.update();
@@ -112,5 +120,26 @@ function keyPressed() {
   if (key == ' ') {
     bird.jump();
     console.log("SPACE");
+  }
+}
+
+function get_score_list(gameName) {
+  return JSON.parse(localStorage.getItem(`${gameName}-scoreList`));
+}
+
+function add_to_score_list(gameName, score) {
+  let arr = get_score_list(gameName);
+
+  if (!arr.includes(score)) {
+    arr.push(score);
+    arr.sort((a, b) => b-a);
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify(arr));
+  }
+}
+
+function make_score_list(gameName) {
+  let scoreList = localStorage.getItem(`${gameName}-scoreList`);
+  if (scoreList === null) {
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify([]));
   }
 }

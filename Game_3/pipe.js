@@ -9,8 +9,8 @@ function Pipe() {
   
   
     this.hits = function(bird) {
-      if (bird.y < this.top || bird.y > height - this.bottom) {
-        if (bird.x > this.x && bird.x < this.x + this.w) {
+      if (bird.y - 10 < this.top || bird.y + 10 > height - this.bottom) {
+        if (bird.x + 20 > this.x && bird.x -   20 < this.x + this.w) {
           return true;
         }
       }
