@@ -415,6 +415,7 @@ function keyPressed() {
 
     case 81: // q
       backgroundImage.stop(); // exit map
+      onSongEnd();
       break;
 
     default:
