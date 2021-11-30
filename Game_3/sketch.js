@@ -36,7 +36,6 @@ function setup() {
 }
 
 function draw() {
-  background(61, 72, 73);
   image(bg, bgX, parentHeight/2, parentWidth, parentHeight);
   image(bg, bgX + parentWidth, parentHeight/2, parentWidth, parentHeight);
   image(bg, bgX + parentWidth * 2, parentHeight/2, parentWidth, parentHeight);
