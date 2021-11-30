@@ -147,6 +147,7 @@ function setup() {
   isKeyHeld = false;
 
   song.onended(onSongEnd);
+  song.setVolume(0.2);
 
   noCursor();
   song.play();
@@ -286,7 +287,7 @@ function onSongEnd() {
 
     make_score_list("game1");
     let score_list = get_score_list("game1");
-    add_to_score_list("game1", gameScore);
+    add_to_score_list("game1", gameScore.toLocaleString(undefined));
   }
 }
 
