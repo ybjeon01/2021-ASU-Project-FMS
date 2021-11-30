@@ -285,6 +285,10 @@ function onSongEnd() {
   document.getElementById("result_score").innerHTML = gameScore.toLocaleString(undefined) + " points";
   document.getElementById("result_accuracy").innerHTML = mapAcc + "%";
   document.getElementById("result_combo").innerHTML = combo + "X";
+
+  make_score_list("game1");
+  let score_list = get_score_list("game1");
+  add_to_score_list("game1", gameScore);
 }
 
 function mousePressed(event) {
@@ -416,5 +420,26 @@ function keyPressed() {
     default:
       console.log('Key Pressed: ' + keyCode);
       break;
+  }
+}
+
+function get_score_list(gameName) {
+  return JSON.parse(localStorage.getItem(`${gameName}-scoreList`));
+}
+
+function add_to_score_list(gameName, score) {
+  let arr = get_score_list(gameName);
+
+  if (!arr.includes(score)) {
+    arr.push(score);
+    arr.sort((a, b) => b - a);
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify(arr));
+  }
+}
+
+function make_score_list(gameName) {
+  let scoreList = localStorage.getItem(`${gameName}-scoreList`);
+  if (scoreList === null) {
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify([]));
   }
 }
