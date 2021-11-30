@@ -110,7 +110,9 @@ function draw(){
     noStroke();
     rect(0, 0, parentWidth, parentHeight);
     endMsg = "You Win! Your final time was: " + formatTime(counter);
-    localStorage.setItem("Time",formatTime(counter))
+    make_score_list("game4");
+    let score_list = get_score_list("game4");
+    add_to_score_list("game4", formatTime(counter));
     c = 'white';
     sizeText = 25
     textOffset = 190
@@ -312,4 +314,25 @@ function formatTime(s){
 function returnToMainMenu()
 {
   window.location.href = "/2021-ASU-Project-FMS/";
+}
+
+function get_score_list(gameName) {
+  return JSON.parse(localStorage.getItem(`${gameName}-scoreList`));
+}
+
+function add_to_score_list(gameName, score) {
+  let arr = get_score_list(gameName);
+
+  if (!arr.includes(score)) {
+    arr.push(score);
+    arr.sort((a, b) => b-a);
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify(arr));
+  }
+}
+
+function make_score_list(gameName) {
+  let scoreList = localStorage.getItem(`${gameName}-scoreList`);
+  if (scoreList === null) {
+    localStorage.setItem(`${gameName}-scoreList`, JSON.stringify([]));
+  }
 }
